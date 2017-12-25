@@ -2,17 +2,12 @@
 % Please edit documentation in R/zbrt.R
 \name{catchParam}
 \alias{catchParam}
-\title{Compute predictors for Zhou-BRT catch-only stock assessment model}
+\title{Compute predictors for the Zhou-BRT catch-only stock assessment model}
 \usage{
 catchParam(catchData)
 }
 \arguments{
-\item{yr}{A time series of years}
-
-\item{catch}{A time series of catch}
-}
-\value{
-A time series of B/BMSY estimates
+\item{catchData}{A dataframe with columns "stock", "yr", and "catch"}
 }
 \description{
 This function calculates the catch statistics used as predictors in the Zhou-BRT
