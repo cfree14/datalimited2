@@ -1,17 +1,23 @@
 
+# For testing
+# yr <- 1970:2010
+# catch <- runif(length(yr), min=10, max=100)
+# fit_zbrt(yr=yr, catch=catch)
+# zbrt(yr, catch)
+
+# Read data
 system.file("extdata", "BRTmodelP8.RData", package = "datalimited2")
 system.file("extdata", "BRTmodelP38.RData", package = "datalimited2")
 
-#' Compute predictors for Zhou-BRT catch-only stock assessment model
+#' Compute predictors for the Zhou-BRT catch-only stock assessment model
 #'
 #' This function calculates the catch statistics used as predictors in the Zhou-BRT
 #' catch-only stock assessment model.
 #'
-#' @param yr A time series of years
-#' @param catch A time series of catch
-#' @return A time series of B/BMSY estimates
+#' @param catchData A dataframe with columns "stock", "yr", and "catch"
 #' @export
 catchParam = function(catchData) {
+  set.seed(1)
   sid = unique(as.character(catchData$stock))
   n.stock = length(sid)
   para = matrix(NA, n.stock, 57)
@@ -72,7 +78,10 @@ catchParam = function(catchData) {
 #'
 #' @param yr A time series of years
 #' @param catch A time series of catch
-#' @return A time series of B/BMSY estimates
+#' @return B/BMSY estimate for the terminal year of the time series
+#' @references Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
+#' (2017) Estimating stock depletion level from patterns of catch history. Fish and Fisheries.
+#' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}
 #' @export
 fit_zbrt <- function(yr, catch){
 
@@ -107,3 +116,33 @@ fit_zbrt <- function(yr, catch){
   return(s)
 
 }
+
+#' Fit the Zhou-BRT catch-only stock assessment model
+#'
+#' This function fits the Zhou-BRT catch-only stock assessment model. It
+#' only requires a time series of catch.
+#'
+#' @param yr A time series of years
+#' @param catch A time series of catch
+#' @return B/BMSY estimate for the terminal year of the time series
+#' @references Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
+#' (2017) Estimating stock depletion level from patterns of catch history. Fish and Fisheries.
+#' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}
+#' @export
+zbrt <- function(yr, catch){
+  # Create dataframe with S estimates
+  d <- data.frame(year=yr, catch=catch, s=NA, bbmsy=NA)
+  # Loop through years and estimate S
+  # zBRT requires 7 years of data
+  for(i in nrow(d):8){
+    yr_use <- d$year[1:i]
+    catch_use <- d$catch[1:i]
+    d$s[i] <- fit_zbrt(yr=yr_use, catch=catch_use)
+  }
+  # Calculate B/BMSY from S
+  d$bbmsy <- d$s * 2
+  return(d)
+}
+
+
+
