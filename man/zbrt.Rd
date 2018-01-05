@@ -2,24 +2,30 @@
 % Please edit documentation in R/zbrt.R
 \name{zbrt}
 \alias{zbrt}
-\title{Fit the Zhou-BRT catch-only stock assessment model}
+\title{Zhou-BRT catch-only assessment model}
 \usage{
-zbrt(yr, catch)
+zbrt(year, catch)
 }
 \arguments{
-\item{yr}{A time series of years}
+\item{year}{A time series of years}
 
 \item{catch}{A time series of catch}
 }
 \value{
-B/BMSY estimate for the terminal year of the time series
+A time series of saturation and B/BMSY estimates. S8 and S38
+correspond to the saturation estimates from the 8- and 38-predictor models.
+S, the best estimate of saturation, is the mean of these two predictions.
+B/BMSY is this estimate doubled (B/BMSY = S * 2).
 }
 \description{
-This function fits the Zhou-BRT catch-only stock assessment model. It
-only requires a time series of catch.
+Estimates saturation (S; S = B/BMSY / 2) from a time series of catch using the
+boosted regression tree model from Zhou et al. (2017).
+}
+\examples{
+zbrt(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc)
 }
 \references{
 Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
-(2017) Estimating stock depletion level from patterns of catch history. Fish and Fisheries.
+(2017) Estimating stock depletion level from patterns of catch history. \emph{Fish and Fisheries}.
 \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}
 }

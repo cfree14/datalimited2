@@ -6,10 +6,6 @@
 \usage{
 catchParam(catchData)
 }
-\arguments{
-\item{catchData}{A dataframe with columns "stock", "yr", and "catch"}
-}
 \description{
-This function calculates the catch statistics used as predictors in the Zhou-BRT
-catch-only stock assessment model.
+Compute predictors for the Zhou-BRT catch-only stock assessment model
 }
