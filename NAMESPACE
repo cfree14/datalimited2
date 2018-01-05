@@ -2,4 +2,5 @@
 
 export(catchParam)
 export(fit_zbrt)
+export(rorcs)
 export(zbrt)
