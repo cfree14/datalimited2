@@ -18,10 +18,10 @@
 # Read data
 system.file("data", "refined_orcs_approach_bct_model.Rdata", package = "datalimited2")
 
-#' Predict stock status using the refined ORCS approach
+#' Refined ORCS approach
 #'
-#' This function predicts stock status (i.e., under, fully, or overexploited) using
-#' the refined ORCS approach (Free et al. 2017).
+#' Predicts stock status (i.e., under, fully, or overexploited) using
+#' the refined ORCS approach from Free et al. 2017.
 #'
 #' @param scores A numeric vector of length twelve containing scores for the
 #' following "Table of Attributes" questions:
@@ -42,8 +42,11 @@ system.file("data", "refined_orcs_approach_bct_model.Rdata", package = "datalimi
 #' @return Stock status (i.e., under, fully, or overexploited)
 #' @references Free CM, Jensen OP, Wiedenmann J, Deroba JJ (2017) The
 #' refined ORCS approach: a catch-based method for estimating stock status
-#' and catch limits for data-poor fish stocks. Fisheries Research 193: 60-70.
+#' and catch limits for data-poor fish stocks. \emph{Fisheries Research} 193: 60-70.
 #' \url{https://doi.org/10.1016/j.fishres.2017.03.017}
+#' @examples
+#' scores <- c(1, 2, NA, 2, 2, 3, 1.93, 2, 1, 2, 1, 3)
+#' rorcs(scores)
 #' @export
 rorcs <- function(scores){
 
