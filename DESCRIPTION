@@ -3,7 +3,7 @@ Type: Package
 Title: More Stock Assessment Methods for Data-limited Fisheries
 Version: 0.0.0.9000
 Date: 2018-01-05
-Authors@R: person(c("Christoper", "M."), "Free", email = "cfree14@gmail.com", role = c("aut", "cre"))
+Authors@R: person(c("Christopher", "M."), "Free", email = "cfree14@gmail.com", role = c("aut", "cre"))
 Description: Methods for estimating B/BMSY from fisheries catch time series.
 URL: https://github.com/cfree14/datalimited2
 Depends: R (>= 3.4.2)
