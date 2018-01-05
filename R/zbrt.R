@@ -6,8 +6,8 @@
 # zbrt(yr, catch)
 
 # Read data
-system.file("extdata", "BRTmodelP8.RData", package = "datalimited2")
-system.file("extdata", "BRTmodelP38.RData", package = "datalimited2")
+system.file("data", "BRTmodelP8.RData", package = "datalimited2")
+system.file("data", "BRTmodelP38.RData", package = "datalimited2")
 
 #' Compute predictors for the Zhou-BRT catch-only stock assessment model
 #'
