@@ -1,0 +1,61 @@
+model{
+        # to reduce chance of non-convergence, Pmean[t] values are forced >= eps
+        eps<-0.01
+        penm[1] <- 0 # no penalty for first biomass
+        Pmean[1] <- log(alpha)
+        P[1] ~ dlnorm(Pmean[1],itau2)
+  
+        for (t in 2:nyr) {
+        Pmean[t] <- ifelse(P[t-1] > 0.25,
+        log(max(P[t-1] + r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps)),  # Process equation
+        log(max(P[t-1] + 4*P[t-1]*r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps))) # assuming reduced r at B/k < 0.25
+        P[t] ~ dlnorm(Pmean[t],itau2) # Introduce process error
+        penm[t]  <- ifelse(P[t]<(eps+0.001),log(q*k*P[t])-log(q*k*(eps+0.001)),ifelse(P[t]>1,log(q*k*P[t])-log(q*k*(0.99)),0)) # penalty if Pmean is outside viable biomass
+        }
+  
+        # ><> Biomass priors/penalties are enforced as follows
+        for (i in 1:3) {
+        penb[i]  <- ifelse(P[b.yrs[i]]<b.prior[1,i],log(q*k*P[b.yrs[i]])-log(q*k*b.prior[1,i]),ifelse(P[b.yrs[i]]>b.prior[2,i],log(q*k*P[b.yrs[i]])-log(q*k*b.prior[2,i]),0))
+        b.prior[3,i] ~ dnorm(penb[i],100)
+        }
+  
+        for (t in 1:nyr){
+        Fpen[t]   <- ifelse(ct[t]>(0.9*k*P[t]),ct[t]-(0.9*k*P[t]),0) #><> Penalty term on F > 1, i.e. ct>B
+        pen.F[t]  ~ dnorm(Fpen[t],1000)
+        pen.bk[t] ~ dnorm(penm[t],10000)
+        cpuem[t]  <- log(q*P[t]*k);
+        bt[t]     ~ dlnorm(cpuem[t],isigma2);
+        }
+  
+        # priors
+        log.alpha               <- log((startbio[1]+startbio[2])/2) # needed for fit of first biomass
+        sd.log.alpha            <- (log.alpha-log(startbio[1]))/4
+        tau.log.alpha           <- pow(sd.log.alpha,-2)
+        alpha                   ~  dlnorm(log.alpha,tau.log.alpha)
+  
+        # search in the k space starting from 20% of the range
+        log.km              <- log(start.k[1]+0.2*(start.k[2]-start.k[1]))
+        sd.log.k            <- (log.km-log(start.k[1]))/4
+        tau.log.k           <- pow(sd.log.k,-2)
+        k                   ~  dlnorm(log.km,tau.log.k)
+  
+        # set realistic prior for q
+        log.qm              <- mean(log(q.prior))
+        sd.log.q            <- (log.qm-log(q.prior[1]))/4
+        tau.log.q           <- pow(sd.log.q,-2)
+        q                   ~  dlnorm(log.qm,tau.log.q)
+  
+        # define process (tau) and observation (sigma) variances as inversegamma prios
+        itau2 ~ dgamma(4,0.01)
+        tau2  <- 1/itau2
+        tau   <- pow(tau2,0.5)
+  
+        isigma2 ~ dgamma(2,0.01)
+        sigma2 <- 1/isigma2
+        sigma <- pow(sigma2,0.5)
+  
+        log.rm              <- mean(log(start.r))
+        sigma.log.r         <- abs(log.rm - log(start.r[1]))/2
+        tau.log.r           <- pow(sigma.log.r,-2)
+        r                   ~  dlnorm(log.rm,tau.log.r)
+      } 
