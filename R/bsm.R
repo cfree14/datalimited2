@@ -72,7 +72,9 @@
 #' Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 #' @examples
-#' bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
+#' output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
+#' plot_cmsy2(output)
+#' plot_cmsy2_mgmt(output)
 #' @export
 bsm <- function(year, catch, biomass, btype, resilience=NA,
                 r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
@@ -516,6 +518,10 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                        fmsy=Fmsy.vec, fmsy_lo=lcl.Fmsy.vec, fmsy_hi=ucl.Fmsy.vec,
                        ffmsy=F.Fmsy, ffmsy_lo=lcl.F.Fmsy, ffmsy_hi=ucl.F.Fmsy,
                        er=Fm/Fmsy)
+
+  #stop parallel processing clusters
+  stopCluster(cl)
+  stopImplicitCluster()
 
   # Assemble output
   output <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,

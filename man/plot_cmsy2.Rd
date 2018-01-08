@@ -2,23 +2,23 @@
 % Please edit documentation in R/plot_cmsy2.R
 \name{plot_cmsy2}
 \alias{plot_cmsy2}
-\title{Plot cMSY model results}
+\title{Plot cMSY and BSM model results}
 \usage{
 plot_cmsy2(output)
 }
 \arguments{
-\item{output}{Output from the cMSY stock assessment model (see ?cmsy2)}
+\item{output}{Output from the cMSY or BSM stock assessment models (see ?cmsy2 or ?bsm)}
 }
 \value{
 Six plots: (1) catch time series; (2) r-k pair search; (3) viable r-k pairs;
 (4) saturation time series; (5) exploitation rate time series; (6) surplus production curve
 }
 \description{
-Plots cMSY model results for following the example of Froese et al. (2016).
-The following six plots are produced:
+Plots cMSY and BSM model results following the example of Froese et al. (2016).
+Produces the following six plots:
 \itemize{
   \item{A - Catch time series}
-  \item{B - Finding r-k pairs}
+  \item{B - Finding viable r-k pairs}
   \item{C - Viable r-k pairs}
   \item{D - Saturation (B/k) time series}
   \item{E - Exploitation rate (F / (r/2)) time series}
@@ -26,7 +26,13 @@ The following six plots are produced:
 }
 }
 \examples{
+# Fit cMSY and plot results
 output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)
+plot_cmsy2(output)
+plot_cmsy2_mgmt(output)
+
+# Fit BSM and plot results
+output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
 plot_cmsy2(output)
 plot_cmsy2_mgmt(output)
 }

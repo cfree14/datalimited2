@@ -125,8 +125,8 @@ plot_cmsy2 <- function(output){
   ##############################################################
 
   # Plot exploitation rate
-  ymax <- ceiling(max(er) / 0.5) * 0.5
-  plot(er ~ year, type="l", bty="l", lwd=1.5, ylim=c(0, ymax),
+  ymax <- ceiling(max(ref_ts$er) / 0.5) * 0.5
+  plot(er ~ year, ref_ts, type="l", bty="l", lwd=1.5, ylim=c(0, ymax),
        xlab="Year", ylab="F / (r/2)", main="E: Exploitation rate", col=col.use)
   abline(h=1, lty="dashed")
 

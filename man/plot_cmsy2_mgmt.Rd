@@ -2,28 +2,34 @@
 % Please edit documentation in R/plot_cmsy2_mgmt.R
 \name{plot_cmsy2_mgmt}
 \alias{plot_cmsy2_mgmt}
-\title{Plot cMSY model results for management}
+\title{Plot cMSY and BSM model results for management}
 \usage{
 plot_cmsy2_mgmt(output)
 }
 \arguments{
-\item{output}{Output from the cMSY stock assessment model (see ?cmsy2)}
+\item{output}{Output from the cMSY or BSM stock assessment model (see ?cmsy2 or ?bsm)}
 }
 \value{
 Four plots: (1) catch time series; (2) B/BMSY time series; (3) F/FMSY time serie; and (4) Kobe plot
 }
 \description{
-Plots cMSY model results for management following the example of Froese et al. (2016).
-The following four plots are produced:
+Plots cMSY and BSM model results for management following the example of Froese et al. (2016).
+Produces the following four plots:
 \itemize{
-  \item{Catch time series}
-  \item{B/BMSY time series}
-  \item{F/FMSY time series}
-  \item{Kobe plot}
+  \item{A - Catch time series}
+  \item{B - B/BMSY time series}
+  \item{C - F/FMSY time series}
+  \item{D - Kobe plot}
 }
 }
 \examples{
+# Fit cMSY and plot results
 output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)
+plot_cmsy2(output)
+plot_cmsy2_mgmt(output)
+
+# Fit BSM and plot results
+output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
 plot_cmsy2(output)
 plot_cmsy2_mgmt(output)
 }

@@ -155,7 +155,7 @@ SchaeferMC <- function(ri, ki, startbio, int.yr, intbio, endbio, sigR, pt, dunce
 
 # Calculate moving average
 ma <- function(x){
-  x.1 <- filter(x,rep(1/3,3),sides=1)
+  x.1 <- stats::filter(x,rep(1/3,3),sides=1)
   x.1[1] <- x[1]
   x.1[2] <- (x[1]+x[2])/2
   return(x.1)
