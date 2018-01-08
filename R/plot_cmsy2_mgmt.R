@@ -1,26 +1,35 @@
 
-#' Plot cMSY model results for management
+#' Plot cMSY and BSM model results for management
 #'
-#' Plots cMSY model results for management following the example of Froese et al. (2016).
-#' The following four plots are produced:
+#' Plots cMSY and BSM model results for management following the example of Froese et al. (2016).
+#' Produces the following four plots:
 #' \itemize{
-#'   \item{Catch time series}
-#'   \item{B/BMSY time series}
-#'   \item{F/FMSY time series}
-#'   \item{Kobe plot}
+#'   \item{A - Catch time series}
+#'   \item{B - B/BMSY time series}
+#'   \item{C - F/FMSY time series}
+#'   \item{D - Kobe plot}
 #' }
 #'
-#' @param output Output from the cMSY stock assessment model (see ?cmsy2)
+#' @param output Output from the cMSY or BSM stock assessment model (see ?cmsy2 or ?bsm)
 #' @return Four plots: (1) catch time series; (2) B/BMSY time series; (3) F/FMSY time serie; and (4) Kobe plot
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2016)
 #' A Simple User Guide for CMSY and BSM (version “q”). 27 October 2016.
 #' \url{http://oceanrep.geomar.de/33076/}
 #' @examples
+#' # Fit cMSY and plot results
 #' output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)
+#' plot_cmsy2(output)
+#' plot_cmsy2_mgmt(output)
+#'
+#' # Fit BSM and plot results
+#' output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
 #' plot_cmsy2(output)
 #' plot_cmsy2_mgmt(output)
 #' @export
 plot_cmsy2_mgmt <- function(output){
+
+  # cMSY or BSMY?
+  model <- ifelse(length(output)==6, "cMSY", "BSM")
 
   # Unpack output
   ref_pts <- output[["ref_pts"]]
@@ -97,11 +106,12 @@ plot_cmsy2_mgmt <- function(output){
   c2 <- c(1,1)
 
   max.x1   <- max(c(2, max(kernelF$contours$"0.95"$x, last_ffmsy_hi), na.rm =T))
-  max.x    <- ifelse(max.x1 > 5,min(max(5,ffmsy*2),8),max.x1)
+  max.x    <- ifelse(max.x1 > 5, min(max(5,ffmsy*2),8),max.x1)
   max.y    <- max(max(2,quantile(y.b_bmsy,0.96)))
 
   # Create plot
-  plot(1000,1000,type="b", xlim=c(0,max.x), ylim=c(0,max.y),lty=3,xlab="",ylab="", bty="l")
+  xmax <- ceiling(max(ref_ts$ffmsy, max.x))
+  plot(1000,1000, type="b", xlim=c(0,xmax), ylim=c(0,max.y),lty=3,xlab="",ylab="", bty="l")
   mtext("F / Fmsy",side=1, line=2)
   mtext("B / Bmsy",side=2, line=2)
 
