@@ -4,7 +4,7 @@
 \alias{cmsy2}
 \title{cMSY catch-only stock assessment model}
 \usage{
-cmsy2(year, catch, resilience, r.low = NA, r.hi = NA, stb.low = NA,
+cmsy2(year, catch, resilience = NA, r.low = NA, r.hi = NA, stb.low = NA,
   stb.hi = NA, int.yr = NA, intb.low = NA, intb.hi = NA,
   endb.low = NA, endb.hi = NA, q.start = NA, q.end = NA, verbose = T)
 }
@@ -13,7 +13,7 @@ cmsy2(year, catch, resilience, r.low = NA, r.hi = NA, stb.low = NA,
 
 \item{catch}{A time series of catch}
 
-\item{resilience}{Resilience of the stock: "high", "medium", "low", "very low", "unknown"}
+\item{resilience}{Resilience of the stock: "High", "Medium", "Low", "Very low"}
 
 \item{int.yr}{A user-specified year of intermediate biomass (optional)}
 
@@ -29,12 +29,9 @@ cmsy2(year, catch, resilience, r.low = NA, r.hi = NA, stb.low = NA,
 
 \item{q.start/q.end}{A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)}
 }
-\value{
-A time series of B/BSMY estimates
-}
 \description{
-Estimates B/BMSY and biological quantities and reference points using only
-a time series of catch and estimate of resilience using cMSY from Froese et al. (2017).
+Estimates B/BMSY time series and other biological quantities using only
+a time series of catch and a resilience estimate using cMSY from Froese et al. (2017).
 }
 \examples{
 output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)

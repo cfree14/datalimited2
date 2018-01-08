@@ -282,9 +282,9 @@ k_prior <- function(endbio, start.r, ct){
 #'   \item{A dataframe with biological quantity / reference point estimates with 95% confidence intervals}
 #'   \item{A dataframe with B/BMSY and reference point time series with 95% confidence intervals}
 #'   \item{A dataframe with the priors used in the cMSY analysis}
-#'   \item{A vector with the viable r (intrinsic growth rate) values}
-#'   \item{A vector with the viable k (carrying capacity) values}
-#'   \item{A vector with the viable saturation (B/k) values}
+#'   \item{A vector with the viable r values}
+#'   \item{A vector with the viable k values}
+#'   \item{A vector with the viable saturation values}
 #' }
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
 #' Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
