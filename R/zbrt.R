@@ -1,17 +1,10 @@
 
-# For testing
-# year <- YELLSNEMATL$year
-# catch <- YELLSNEMATL$tc
-# fit_zbrt(year=year, catch=catch)
-# s <- zbrt(year=year, catch=catch)
-# sum(s$s, na.rm=T)
-
 # Read data
 system.file("data", "YELLSNEMATL.Rdata", package = "datalimited2")
 system.file("data", "BRTmodelP8.RData", package = "datalimited2")
 system.file("data", "BRTmodelP38.RData", package = "datalimited2")
 
-#' Compute predictors for the Zhou-BRT catch-only stock assessment model
+# Compute predictors for the Zhou-BRT catch-only stock assessment model
 catchParam <- function(catchData) {
   sid = unique(as.character(catchData$stock))
   n.stock = length(sid)
@@ -100,26 +93,29 @@ fit_zbrt <- function(year, catch){
   return(s)
 }
 
-#' Zhou-BRT catch-only assessment model
+#' Zhou-BRT catch-only stock assessment model
 #'
-#' Estimates saturation (S; S = B/BMSY / 2) from a time series of catch using the
-#' boosted regression tree model from Zhou et al. (2017).
+#' Estimates saturation (B/K) and stock status (B/BMSY) time series from a
+#' time series of catch using the boosted regression tree (BRT) model from Zhou et al. (2017).
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
-#' @return A time series of saturation and B/BMSY estimates. S8 and S38
-#' correspond to the saturation estimates from the 8- and 38-predictor models.
+#' @return A dataframe with a time series of saturation and B/BMSY estimates. S8 and S38
+#' correspond to the saturation estimates from the 8- and 38-predictor models, respectively.
 #' S, the best estimate of saturation, is the mean of these two predictions.
-#' B/BMSY is this estimate doubled (B/BMSY = S * 2).
+#' B/BMSY is this estimate doubled (B/BMSY = S * 2). High and low values correspond to the
+#' upper and lower 95% confidence intervals, respectively.
 #' @references Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
 #' (2017) Estimating stock depletion level from patterns of catch history. \emph{Fish and Fisheries}.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}
 #' @examples
-#' zbrt(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc)
+#' output <- zbrt(year=TIGERFLAT$yr, catch=TIGERFLAT$catch)
+#' plot_zbrt(output)
 #' @export
 zbrt <- function(year, catch){
   # Create dataframe with S estimates
-  d <- data.frame(year=year, catch=catch, s8=NA, s38=NA, s=NA, bbmsy=NA)
+  d <- data.frame(year=year, catch=catch, s8=NA, s38=NA,
+                  s=NA, s_lo=NA, s_hi=NA, bbmsy=NA, bbmsy_lo=NA, bbmsy_hi=NA)
   # Loop through years and estimate S
   # zBRT requires 7 years of data
   for(i in nrow(d):8){
@@ -127,9 +123,15 @@ zbrt <- function(year, catch){
     catch_use <- d$catch[1:i]
     s_out <- fit_zbrt(year=yr_use, catch=catch_use)
     d[i, c("s8", "s38", "s")] <- s_out
+    # Bootstrap confidence interval
+    s_draws <- Sdistrib(10000, s_out$s)
+    d$s_lo[i] <- quantile(s_draws, probs=0.025)
+    d$s_hi[i] <- quantile(s_draws, probs=0.975)
   }
   # Calculate B/BMSY from S
-  d$bbmsy <- d$s * 2
+  d$bbmsy <- s2bbmsy(d$s)
+  d$bbmsy_lo <- s2bbmsy(d$s_lo)
+  d$bbmsy_hi <- s2bbmsy(d$s_hi)
   return(d)
 }
 
