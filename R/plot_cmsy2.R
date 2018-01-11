@@ -1,8 +1,4 @@
 
-# For testing
-load("~/Desktop/out.Rdata")
-# Get min/max catch years for plot A
-
 #' Plot cMSY and BSM model results
 #'
 #' Plots cMSY and BSM model results following the example of Froese et al. (2016).
