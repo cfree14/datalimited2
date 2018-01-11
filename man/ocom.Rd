@@ -20,12 +20,13 @@ trajectories; (4) estimates of biological quanties r, k, MSY, S; and (5) the
 10,000 draws underpinning these values.
 }
 \description{
-Estimates biological quantities (r, k, MSY, final year saturation) and
-stock status (B/BMSY) from a time series of catch and natural mortality (M)
+Estimates stock status (B/BMSY) and biological quantities (r, k, MSY, final
+year saturation) from a time series of catch and natural mortality (M)
 estimate using the optimized catch-only model from Zhou et al. (2017).
 }
 \examples{
-ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc, m=0.2)
+output <- ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc, m=0.2)
+plot_ocom(output)
 }
 \references{
 Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
