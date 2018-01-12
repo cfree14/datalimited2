@@ -60,12 +60,12 @@
 #' @param biomass A time series of biomass or CPUE (type is designated in btype)
 #' @param btype Biomass time series type: "None", "biomass", or "CPUE"
 #' @param resilience Resilience of the stock: "High", "Medium", "Low", "Very low"
-#' @param r.low/r.hi A user-specified prior on the species intrinsic growth rate, r (optional)
-#' @param stb.low/stb.hi A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)
+#' @param r.low,r.hi A user-specified prior on the species intrinsic growth rate, r (optional)
+#' @param stb.low,stb.hi A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)
 #' @param int.yr A user-specified year of intermediate biomass (optional)
-#' @param intb.low/intb.hi A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)
-#' @param endb.low/endb.hi A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)
-#' @param q.start/q.end A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)
+#' @param intb.low,intb.hi A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)
+#' @param endb.low,endb.hi A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)
+#' @param q.start,q.end A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)
 #' @param verbose Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)
 #' @return A time series of B/BSMY estimates and other stuff
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)

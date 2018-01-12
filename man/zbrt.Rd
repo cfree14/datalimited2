@@ -2,7 +2,7 @@
 % Please edit documentation in R/zbrt.R
 \name{zbrt}
 \alias{zbrt}
-\title{Zhou-BRT catch-only assessment model}
+\title{Zhou-BRT catch-only stock assessment model}
 \usage{
 zbrt(year, catch)
 }
@@ -12,17 +12,19 @@ zbrt(year, catch)
 \item{catch}{A time series of catch}
 }
 \value{
-A time series of saturation and B/BMSY estimates. S8 and S38
-correspond to the saturation estimates from the 8- and 38-predictor models.
+A dataframe with a time series of saturation and B/BMSY estimates. S8 and S38
+correspond to the saturation estimates from the 8- and 38-predictor models, respectively.
 S, the best estimate of saturation, is the mean of these two predictions.
-B/BMSY is this estimate doubled (B/BMSY = S * 2).
+B/BMSY is this estimate doubled (B/BMSY = S * 2). High and low values correspond to the
+upper and lower 95% confidence intervals, respectively.
 }
 \description{
-Estimates saturation (S; S = B/BMSY / 2) from a time series of catch using the
-boosted regression tree model from Zhou et al. (2017).
+Estimates saturation (B/K) and stock status (B/BMSY) time series from a
+time series of catch using the boosted regression tree (BRT) model from Zhou et al. (2017).
 }
 \examples{
-zbrt(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc)
+output <- zbrt(year=TIGERFLAT$yr, catch=TIGERFLAT$catch)
+plot_zbrt(output)
 }
 \references{
 Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM

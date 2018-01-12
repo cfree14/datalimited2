@@ -15,19 +15,28 @@ cmsy2(year, catch, resilience = NA, r.low = NA, r.hi = NA, stb.low = NA,
 
 \item{resilience}{Resilience of the stock: "High", "Medium", "Low", "Very low"}
 
+\item{r.low, r.hi}{A user-specified prior on the species intrinsic growth rate, r (optional)}
+
+\item{stb.low, stb.hi}{A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)}
+
 \item{int.yr}{A user-specified year of intermediate biomass (optional)}
 
+\item{intb.low, intb.hi}{A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)}
+
+\item{endb.low, endb.hi}{A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)}
+
+\item{q.start, q.end}{A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)}
+
 \item{verbose}{Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)}
-
-\item{r.low/r.hi}{A user-specified prior on the species intrinsic growth rate, r (optional)}
-
-\item{stb.low/stb.hi}{A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)}
-
-\item{intb.low/intb.hi}{A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)}
-
-\item{endb.low/endb.hi}{A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)}
-
-\item{q.start/q.end}{A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)}
+}
+\value{
+A list of length six with the following elements:
+(1) A dataframe with biological quantity / reference point estimates with 95% confidence intervals;
+(2) A dataframe with B/BMSY and reference point time series with 95% confidence intervals;
+(3) A dataframe with the priors used in the cMSY analysis;
+(4) A vector with the viable r values;
+(5) A vector with the viable k values;
+(6) A vector with the viable saturation values.
 }
 \description{
 Estimates B/BMSY time series and other biological quantities using only
