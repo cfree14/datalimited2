@@ -84,10 +84,10 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Setup parallel processing
   # Use 3 chains in JAGS if more than 2 cores are available
-  # n.cores <- parallel::detectCores()
-  # n.chains <- ifelse(n.cores > 2,3,2)
-  # cl <- parallel::makeCluster(n.cores)
-  # doParallel::registerDoParallel(cl, cores = n.cores)
+  n.cores <- parallel::detectCores()
+  n.chains <- ifelse(n.cores > 2,3,2)
+  cl <- parallel::makeCluster(n.cores)
+  doParallel::registerDoParallel(cl, cores = n.cores)
 
   # Set model parameters
   FullSchaefer <- F # will automatically change to TRUE if enough abundance data available
@@ -519,8 +519,8 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                        er=Fm/Fmsy)
 
   #stop parallel processing clusters
-  # parallel::stopCluster(cl)
-  # doParallel::stopImplicitCluster()
+  parallel::stopCluster(cl)
+  doParallel::stopImplicitCluster()
 
   # Assemble output
   output <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
