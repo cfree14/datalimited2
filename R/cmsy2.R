@@ -34,6 +34,7 @@
 #
 # # For testing
 # # Required parameters
+# load("data/SOLIRIS.Rda")
 # year <- SOLIRIS$yr
 # catch <- SOLIRIS$ct
 # biomass <- SOLIRIS$bt
@@ -48,6 +49,7 @@
 ################################################################################
 
 # Monte Carlo filtering with Schaefer Function
+`%dopar%` <- foreach::`%dopar%`
 SchaeferParallelSearch <- function(ni, nyr, sigR, duncert, ct, int.yr, intbio, startbt, ki, i, ri, int.yr.i, nstartbt, yr, end.yr, endbio, npoints, pt){
   ptm <- proc.time()
   # create vectors for viable r, k and bt
