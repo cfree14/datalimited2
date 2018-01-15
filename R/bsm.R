@@ -31,9 +31,10 @@
 # library(foreach)
 # library(doParallel)
 # library(gplots)
-
+#
 # # For testing
 # # Required parameters
+# load("data/SOLIRIS.Rda")
 # year <- SOLIRIS$yr
 # catch <- SOLIRIS$ct
 # biomass <- SOLIRIS$bt
@@ -361,7 +362,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
     ##########################################################
 
     # Write JAGS model to file
-    cat(Model, file="r2jags.bug")
+    cat(Model, file="R/r2jags.bug")
 
     # Initialize JAGS model?
     if(btype=="biomass") {
@@ -378,7 +379,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
     jags_outputs <- R2jags::jags.parallel(data=jags.data,
                                   working.directory=NULL, inits=j.inits,
                                   parameters.to.save=jags.save.params,
-                                  model.file="r2jags.bug", n.chains = n.chains,
+                                  model.file="R/r2jags.bug", n.chains = n.chains,
                                   n.burnin = 30000, n.thin = 10,
                                   n.iter = 60000)
 
