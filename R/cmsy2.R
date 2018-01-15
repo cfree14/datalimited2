@@ -301,10 +301,10 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # Setup parallel processing
   # Use 3 chains in JAGS if more than 2 cores are available
-  n.cores <- detectCores()
+  n.cores <- parallel::detectCores()
   n.chains <- ifelse(n.cores > 2,3,2)
-  cl <- makeCluster(n.cores)
-  registerDoParallel(cl, cores = n.cores)
+  cl <- parallel::makeCluster(n.cores)
+  doParallel::registerDoParallel(cl, cores = n.cores)
 
   # Set model parameters
   FullSchaefer <- F # will automatically change to TRUE if enough abundance data available
@@ -628,8 +628,8 @@ cmsy2 <- function(year, catch, resilience=NA,
                        er=F.CMSY/Fmsy.CMSY)
 
   #stop parallel processing clusters
-  stopCluster(cl)
-  stopImplicitCluster()
+  parallel::stopCluster(cl)
+  doParallel::stopImplicitCluster()
 
   # Return
   out <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
