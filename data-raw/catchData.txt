@@ -1,0 +1,592 @@
+"stock" "yr" "catch"
+"Bight Redfish" 1988 85.651
+"Bight Redfish" 1989 170.833
+"Bight Redfish" 1990 281.808
+"Bight Redfish" 1991 265.612
+"Bight Redfish" 1992 120.698
+"Bight Redfish" 1993 107.472
+"Bight Redfish" 1994 157.803
+"Bight Redfish" 1995 173.922
+"Bight Redfish" 1996 327.177
+"Bight Redfish" 1997 372.617
+"Bight Redfish" 1998 437.788
+"Bight Redfish" 1999 323.641
+"Bight Redfish" 2000 387.879
+"Bight Redfish" 2001 262.613
+"Bight Redfish" 2002 424.672
+"Bight Redfish" 2003 946.477
+"Bight Redfish" 2004 937.456
+"Bight Redfish" 2005 789.704
+"Bight Redfish" 2006 1023.91
+"Bight Redfish" 2007 808.024
+"Bight Redfish" 2008 681.885
+"Bight Redfish" 2009 469.696
+"Bight Redfish" 2010 297.596
+"Bight Redfish" 2011 341.481
+"Bight Redfish" 2012 273.451
+"Bight Redfish" 2013 207.051
+"Bight Redfish" 2014 238.327
+"Blue Grenadier" 1979 499.47
+"Blue Grenadier" 1980 849.533
+"Blue Grenadier" 1981 468.787
+"Blue Grenadier" 1982 791.182
+"Blue Grenadier" 1983 907.633
+"Blue Grenadier" 1984 1370.049
+"Blue Grenadier" 1985 1227.367
+"Blue Grenadier" 1986 2283.53
+"Blue Grenadier" 1987 3431.8
+"Blue Grenadier" 1988 2806.04
+"Blue Grenadier" 1989 3126.1
+"Blue Grenadier" 1990 3381.23
+"Blue Grenadier" 1991 4657.87
+"Blue Grenadier" 1992 3302.39
+"Blue Grenadier" 1993 3436.56
+"Blue Grenadier" 1994 3177.73
+"Blue Grenadier" 1995 2834.96
+"Blue Grenadier" 1996 3453.79
+"Blue Grenadier" 1997 5574.78
+"Blue Grenadier" 1998 6312.95
+"Blue Grenadier" 1999 9567.9
+"Blue Grenadier" 2000 8725
+"Blue Grenadier" 2001 9137.52
+"Blue Grenadier" 2002 9167.03
+"Blue Grenadier" 2003 8473.88
+"Blue Grenadier" 2004 6412.12
+"Blue Grenadier" 2005 4442.96
+"Blue Grenadier" 2006 3677.92
+"Blue Grenadier" 2007 3183.51
+"Blue Grenadier" 2008 3957.08
+"Blue Grenadier" 2009 3270.699
+"Blue Grenadier" 2010 4202.59
+"Blue Grenadier" 2011 4282.545
+"Blue Grenadier" 2012 4197.878
+"Deepwater Flathead" 1988 312.491
+"Deepwater Flathead" 1989 394.672
+"Deepwater Flathead" 1990 420.152
+"Deepwater Flathead" 1991 608.128
+"Deepwater Flathead" 1992 508.162
+"Deepwater Flathead" 1993 585.072
+"Deepwater Flathead" 1994 1254.8
+"Deepwater Flathead" 1995 1551.59
+"Deepwater Flathead" 1996 1459.34
+"Deepwater Flathead" 1997 1010.35
+"Deepwater Flathead" 1998 680.659
+"Deepwater Flathead" 1999 544.992
+"Deepwater Flathead" 2000 776.912
+"Deepwater Flathead" 2001 963.613
+"Deepwater Flathead" 2002 1866.03
+"Deepwater Flathead" 2003 2482.09
+"Deepwater Flathead" 2004 2264.12
+"Deepwater Flathead" 2005 1545.6
+"Deepwater Flathead" 2006 1039.69
+"Deepwater Flathead" 2007 1034.71
+"Deepwater Flathead" 2008 812.663
+"Deepwater Flathead" 2009 851.272
+"Deepwater Flathead" 2010 968.028
+"Deepwater Flathead" 2011 973.371
+"Deepwater Flathead" 2012 1027.84
+"Gemfish East" 1968 1523.46
+"Gemfish East" 1969 1548.2288
+"Gemfish East" 1970 1562.2957
+"Gemfish East" 1971 1576.8484
+"Gemfish East" 1972 1602.8494
+"Gemfish East" 1973 1561.1044
+"Gemfish East" 1974 1884.0493
+"Gemfish East" 1975 1790.0061
+"Gemfish East" 1976 3694.5555
+"Gemfish East" 1977 5126.447
+"Gemfish East" 1978 7309.104
+"Gemfish East" 1979 5630.495
+"Gemfish East" 1980 6569.057
+"Gemfish East" 1981 5098.598
+"Gemfish East" 1982 4609.076
+"Gemfish East" 1983 4096.995
+"Gemfish East" 1984 3784.58834
+"Gemfish East" 1985 3800.3803
+"Gemfish East" 1986 4396.8178
+"Gemfish East" 1987 5285.0787
+"Gemfish East" 1988 4138.3077
+"Gemfish East" 1989 2367.32838
+"Gemfish East" 1990 1768.9463
+"Gemfish East" 1991 1139.1592
+"Gemfish East" 1992 1124.8074
+"Gemfish East" 1993 1287.2156
+"Gemfish East" 1994 529.4838
+"Gemfish East" 1995 555.8516
+"Gemfish East" 1996 622.4644
+"Gemfish East" 1997 625.7524
+"Gemfish East" 1998 401.3323
+"Gemfish East" 1999 291.0343
+"Gemfish East" 2000 125.4315
+"Gemfish East" 2001 78.10462
+"Gemfish East" 2002 54.88585
+"Gemfish East" 2003 75.78475
+"Gemfish East" 2004 92.68521
+"Gemfish East" 2005 92.81775
+"Gemfish East" 2006 95.15185
+"Gemfish East" 2007 111.80507
+"Gemfish East" 2008 186.8054
+"Morwong East" 1915 49
+"Morwong East" 1916 50
+"Morwong East" 1917 58
+"Morwong East" 1918 89
+"Morwong East" 1919 99
+"Morwong East" 1920 145
+"Morwong East" 1921 143
+"Morwong East" 1922 102
+"Morwong East" 1923 98
+"Morwong East" 1924 162
+"Morwong East" 1925 235
+"Morwong East" 1926 259
+"Morwong East" 1927 327
+"Morwong East" 1928 391
+"Morwong East" 1929 450
+"Morwong East" 1930 402
+"Morwong East" 1931 420
+"Morwong East" 1932 385
+"Morwong East" 1933 352
+"Morwong East" 1934 330
+"Morwong East" 1935 364
+"Morwong East" 1936 402
+"Morwong East" 1937 427
+"Morwong East" 1938 430
+"Morwong East" 1939 430
+"Morwong East" 1940 92
+"Morwong East" 1941 100
+"Morwong East" 1942 20
+"Morwong East" 1943 7
+"Morwong East" 1944 256
+"Morwong East" 1945 565
+"Morwong East" 1946 1813
+"Morwong East" 1947 2317
+"Morwong East" 1948 1745
+"Morwong East" 1949 1516
+"Morwong East" 1950 1118
+"Morwong East" 1951 1189
+"Morwong East" 1952 1506
+"Morwong East" 1953 1352
+"Morwong East" 1954 1674
+"Morwong East" 1955 1577
+"Morwong East" 1956 2139
+"Morwong East" 1957 2208
+"Morwong East" 1958 1758
+"Morwong East" 1959 1502
+"Morwong East" 1960 1088
+"Morwong East" 1961 1201
+"Morwong East" 1962 2489
+"Morwong East" 1963 1950
+"Morwong East" 1964 1472
+"Morwong East" 1965 2210
+"Morwong East" 1966 2709
+"Morwong East" 1967 1237
+"Morwong East" 1968 1846
+"Morwong East" 1969 1442
+"Morwong East" 1970 1362
+"Morwong East" 1971 1582
+"Morwong East" 1972 1525
+"Morwong East" 1973 1925
+"Morwong East" 1974 1843
+"Morwong East" 1975 1969
+"Morwong East" 1976 1841
+"Morwong East" 1977 1361
+"Morwong East" 1978 1624
+"Morwong East" 1979 1649
+"Morwong East" 1980 2556
+"Morwong East" 1981 2347
+"Morwong East" 1982 1789
+"Morwong East" 1983 1806
+"Morwong East" 1984 1733
+"Morwong East" 1985 1096
+"Morwong East" 1986 944.5502
+"Morwong East" 1987 1146.4873
+"Morwong East" 1988 1523.882
+"Morwong East" 1989 1639.19
+"Morwong East" 1990 952.242
+"Morwong East" 1991 1139.622
+"Morwong East" 1992 754.565
+"Morwong East" 1993 1112.299
+"Morwong East" 1994 984.061
+"Morwong East" 1995 893.48
+"Morwong East" 1996 1007.608
+"Morwong East" 1997 1252.502
+"Morwong East" 1998 954.276
+"Morwong East" 1999 965.412
+"Morwong East" 2000 880.891
+"Morwong East" 2001 670.601
+"Morwong East" 2002 693.206
+"Morwong East" 2003 671.008
+"Morwong East" 2004 684.755
+"Morwong East" 2005 660.282
+"Morwong East" 2006 652.541
+"Morwong East" 2007 482.187
+"Morwong East" 2008 643.722
+"Morwong East" 2009 417.6175
+"Morwong East" 2010 351.1065
+"Morwong East" 2011 335.0307
+"Morwong East" 2012 364.438
+"Morwong East" 2013 284.031
+"Morwong East" 2014 190.9145
+"Morwong West" 1986 153
+"Morwong West" 1987 60
+"Morwong West" 1988 67
+"Morwong West" 1989 85
+"Morwong West" 1990 83
+"Morwong West" 1991 47
+"Morwong West" 1992 72
+"Morwong West" 1993 27
+"Morwong West" 1994 27
+"Morwong West" 1995 91
+"Morwong West" 1996 44
+"Morwong West" 1997 62
+"Morwong West" 1998 65
+"Morwong West" 1999 89
+"Morwong West" 2000 134
+"Morwong West" 2001 316
+"Morwong West" 2002 289
+"Morwong West" 2003 199
+"Morwong West" 2004 216
+"Morwong West" 2005 230
+"Morwong West" 2006 217
+"Morwong West" 2007 140
+"Morwong West" 2008 124
+"Morwong West" 2009 77
+"Morwong West" 2010 47
+"Morwong West" 2011 99
+"Morwong West" 2012 41
+"Morwong West" 2013 42
+"Morwong West" 2014 13
+"Orange Roughy" 1985 6
+"Orange Roughy" 1986 60
+"Orange Roughy" 1987 310
+"Orange Roughy" 1988 1949
+"Orange Roughy" 1989 28575
+"Orange Roughy" 1990 34502
+"Orange Roughy" 1991 20436
+"Orange Roughy" 1992 24265.1
+"Orange Roughy" 1993 8798
+"Orange Roughy" 1994 4140
+"Orange Roughy" 1995 2544
+"Orange Roughy" 1996 2231
+"Orange Roughy" 1997 2250
+"Orange Roughy" 1998 2087
+"Orange Roughy" 1999 2052
+"Orange Roughy" 2000 2109
+"Orange Roughy" 2001 2027
+"Orange Roughy" 2002 1674
+"Orange Roughy" 2003 877
+"Orange Roughy" 2004 797
+"Orange Roughy" 2005 772
+"Orange Roughy" 2006 615
+"Orange Roughy" 2007 129
+"Orange Roughy" 2008 98
+"Orange Roughy" 2009 193
+"Orange Roughy" 2010 113
+"Orange Roughy" 2011 162
+"Orange Roughy" 2012 163
+"Orange Roughy" 2013 150
+"Pink Ling East" 1977 95
+"Pink Ling East" 1978 114
+"Pink Ling East" 1979 137
+"Pink Ling East" 1980 215
+"Pink Ling East" 1981 299
+"Pink Ling East" 1982 348
+"Pink Ling East" 1983 427
+"Pink Ling East" 1984 512
+"Pink Ling East" 1985 619
+"Pink Ling East" 1986 727
+"Pink Ling East" 1987 710
+"Pink Ling East" 1988 635
+"Pink Ling East" 1989 665
+"Pink Ling East" 1990 686
+"Pink Ling East" 1991 663
+"Pink Ling East" 1992 752
+"Pink Ling East" 1993 1170
+"Pink Ling East" 1994 949
+"Pink Ling East" 1995 1087
+"Pink Ling East" 1996 1188
+"Pink Ling East" 1997 1441
+"Pink Ling East" 1998 1178
+"Pink Ling East" 1999 1375
+"Pink Ling East" 2000 1160
+"Pink Ling East" 2001 917
+"Pink Ling East" 2002 759
+"Pink Ling East" 2003 888
+"Pink Ling East" 2004 888
+"Pink Ling East" 2005 763
+"Pink Ling East" 2006 656
+"Pink Ling East" 2007 514
+"Pink Ling East" 2008 761
+"Pink Ling East" 2009 500
+"Pink Ling East" 2010 590
+"Pink Ling East" 2011 586
+"Pink Ling East" 2012 518
+"Pink Ling East" 2013 382
+"Pink Ling West" 1979 3
+"Pink Ling West" 1980 0
+"Pink Ling West" 1981 0
+"Pink Ling West" 1982 9
+"Pink Ling West" 1983 0
+"Pink Ling West" 1984 0
+"Pink Ling West" 1985 82
+"Pink Ling West" 1986 165
+"Pink Ling West" 1987 273
+"Pink Ling West" 1988 145
+"Pink Ling West" 1989 247
+"Pink Ling West" 1990 207
+"Pink Ling West" 1991 310
+"Pink Ling West" 1992 216
+"Pink Ling West" 1993 575
+"Pink Ling West" 1994 555
+"Pink Ling West" 1995 682
+"Pink Ling West" 1996 875
+"Pink Ling West" 1997 972
+"Pink Ling West" 1998 795
+"Pink Ling West" 1999 658
+"Pink Ling West" 2000 712
+"Pink Ling West" 2001 822
+"Pink Ling West" 2002 857
+"Pink Ling West" 2003 728
+"Pink Ling West" 2004 878
+"Pink Ling West" 2005 661
+"Pink Ling West" 2006 547
+"Pink Ling West" 2007 520
+"Pink Ling West" 2008 439
+"Pink Ling West" 2009 448
+"Pink Ling West" 2010 567
+"Pink Ling West" 2011 674
+"Pink Ling West" 2012 612
+"Pink Ling West" 2013 452
+"Redfish" 1975 1198.95
+"Redfish" 1976 1755.04
+"Redfish" 1977 2163.62
+"Redfish" 1978 2216.44
+"Redfish" 1979 3972.51
+"Redfish" 1980 4642.94
+"Redfish" 1981 3304.49
+"Redfish" 1982 3430.29
+"Redfish" 1983 3695.58
+"Redfish" 1984 3591.02
+"Redfish" 1985 3524.2
+"Redfish" 1986 1957.04
+"Redfish" 1987 1614.79
+"Redfish" 1988 1400.39
+"Redfish" 1989 949.934
+"Redfish" 1990 1205.99
+"Redfish" 1991 1963.01
+"Redfish" 1992 2254.95
+"Redfish" 1993 2691.23
+"Redfish" 1994 2069.84
+"Redfish" 1995 1786.71
+"Redfish" 1996 1855.84
+"Redfish" 1997 1910.78
+"Redfish" 1998 2087.21
+"Redfish" 1999 1606.84
+"Redfish" 2000 976.652
+"Redfish" 2001 976.005
+"Redfish" 2002 1130.56
+"Redfish" 2003 872.389
+"Redfish" 2004 666
+"Redfish" 2005 687.01
+"Redfish" 2006 459.011
+"Redfish" 2007 323.767
+"Redfish" 2008 264.177
+"Redfish" 2009 246.152
+"Redfish" 2010 226.64
+"Redfish" 2011 136.318
+"Redfish" 2012 105.085
+"Redfish" 2013 107.842
+"School Whiting" 1947 133.32152
+"School Whiting" 1948 285.02261
+"School Whiting" 1949 136.11551
+"School Whiting" 1950 51.28787
+"School Whiting" 1951 96.81204
+"School Whiting" 1952 28.752202
+"School Whiting" 1953 49.829
+"School Whiting" 1954 64.19779
+"School Whiting" 1955 53.65655
+"School Whiting" 1956 42.15748
+"School Whiting" 1957 51.043399
+"School Whiting" 1958 103.906973
+"School Whiting" 1959 203.60399
+"School Whiting" 1960 283.380318
+"School Whiting" 1961 25.35901
+"School Whiting" 1962 56.75766
+"School Whiting" 1963 143.54323
+"School Whiting" 1964 168.1279
+"School Whiting" 1965 190.0809
+"School Whiting" 1966 188.93117
+"School Whiting" 1967 147.99776
+"School Whiting" 1968 148.390821
+"School Whiting" 1969 193.101543
+"School Whiting" 1970 259.07857
+"School Whiting" 1971 189.990908
+"School Whiting" 1972 158.084175
+"School Whiting" 1973 315.85392
+"School Whiting" 1974 358.013283
+"School Whiting" 1975 166.50414
+"School Whiting" 1976 521.97706
+"School Whiting" 1977 511.59042
+"School Whiting" 1978 486.00801
+"School Whiting" 1979 776.23755
+"School Whiting" 1980 838.5132
+"School Whiting" 1981 1224.2304
+"School Whiting" 1982 1347.4754
+"School Whiting" 1983 1462.7969
+"School Whiting" 1984 1176.0175
+"School Whiting" 1985 1651.2393
+"School Whiting" 1986 2347.2087
+"School Whiting" 1987 1680.9718
+"School Whiting" 1988 1892.1189
+"School Whiting" 1989 1523.27995
+"School Whiting" 1990 2545.6993
+"School Whiting" 1991 2290.8626
+"School Whiting" 1992 1477.6865
+"School Whiting" 1993 2695.9959
+"School Whiting" 1994 1786.4284
+"School Whiting" 1995 2163.299
+"School Whiting" 1996 1852.829
+"School Whiting" 1997 1696.081
+"School Whiting" 1998 1992.841
+"School Whiting" 1999 1595.252
+"School Whiting" 2000 1460.413
+"School Whiting" 2001 1999.334
+"School Whiting" 2002 1814.404
+"School Whiting" 2003 1689.367
+"School Whiting" 2004 1617.986
+"School Whiting" 2005 1606.919
+"School Whiting" 2006 1704.626
+"School Whiting" 2007 1847.105
+"School Whiting" 2008 1452.943
+"Silver Warehou" 1980 66.173
+"Silver Warehou" 1981 132.3609
+"Silver Warehou" 1982 198.6139
+"Silver Warehou" 1983 265.428
+"Silver Warehou" 1984 334.2
+"Silver Warehou" 1985 416.629
+"Silver Warehou" 1986 1160.226
+"Silver Warehou" 1987 855.866
+"Silver Warehou" 1988 1498.935
+"Silver Warehou" 1989 1030.552
+"Silver Warehou" 1990 1219.576
+"Silver Warehou" 1991 1529.069
+"Silver Warehou" 1992 2112.992
+"Silver Warehou" 1993 2043.76
+"Silver Warehou" 1994 2347.474
+"Silver Warehou" 1995 3423.99
+"Silver Warehou" 1996 3219.44
+"Silver Warehou" 1997 2850.81
+"Silver Warehou" 1998 2736.96
+"Silver Warehou" 1999 3394.35
+"Silver Warehou" 2000 4352.312
+"Silver Warehou" 2001 4508.41
+"Silver Warehou" 2002 4183.609
+"Silver Warehou" 2003 3683.908
+"Silver Warehou" 2004 4081.472
+"Silver Warehou" 2005 2712.269
+"Silver Warehou" 2006 2303.381
+"Silver Warehou" 2007 2121.256
+"Silver Warehou" 2008 1597.136
+"Silver Warehou" 2009 1447.798
+"Silver Warehou" 2010 1364.48
+"Silver Warehou" 2011 1309.596
+"Silver Warehou" 2012 914.928
+"Silver Warehou" 2013 698.59
+"Silver Warehou" 2014 415.292
+"Tiger Flathead" 1915 446.988
+"Tiger Flathead" 1916 449.398
+"Tiger Flathead" 1917 520.482
+"Tiger Flathead" 1918 808.434
+"Tiger Flathead" 1919 1386.75
+"Tiger Flathead" 1920 1121.69
+"Tiger Flathead" 1921 1562.65
+"Tiger Flathead" 1922 1012.05
+"Tiger Flathead" 1923 959.036
+"Tiger Flathead" 1924 1633.73
+"Tiger Flathead" 1925 2372.29
+"Tiger Flathead" 1926 2610.84
+"Tiger Flathead" 1927 3295.18
+"Tiger Flathead" 1928 3948.19
+"Tiger Flathead" 1929 4662.652
+"Tiger Flathead" 1930 4408.43
+"Tiger Flathead" 1931 3537.34928
+"Tiger Flathead" 1932 3646.985
+"Tiger Flathead" 1933 3012.052
+"Tiger Flathead" 1934 3077.11
+"Tiger Flathead" 1935 3354.221
+"Tiger Flathead" 1936 4318.07
+"Tiger Flathead" 1937 4275.9
+"Tiger Flathead" 1938 4396.384
+"Tiger Flathead" 1939 3879.52
+"Tiger Flathead" 1940 2316.868
+"Tiger Flathead" 1941 1997.592
+"Tiger Flathead" 1942 472.289
+"Tiger Flathead" 1943 650.603
+"Tiger Flathead" 1944 3540.968
+"Tiger Flathead" 1945 3760.24
+"Tiger Flathead" 1946 3027.71
+"Tiger Flathead" 1947 2502.41
+"Tiger Flathead" 1948 3014.452
+"Tiger Flathead" 1949 1366.265
+"Tiger Flathead" 1950 1692.774
+"Tiger Flathead" 1951 2660.24
+"Tiger Flathead" 1952 2732.526
+"Tiger Flathead" 1953 3315.661
+"Tiger Flathead" 1954 2533.734
+"Tiger Flathead" 1955 2581.927
+"Tiger Flathead" 1956 2439.757
+"Tiger Flathead" 1957 1925.3
+"Tiger Flathead" 1958 1453.0077
+"Tiger Flathead" 1959 1806.0242
+"Tiger Flathead" 1960 2675.9023
+"Tiger Flathead" 1961 2091.0934
+"Tiger Flathead" 1962 1830.84
+"Tiger Flathead" 1963 3940.2
+"Tiger Flathead" 1964 3932.51
+"Tiger Flathead" 1965 3543.66
+"Tiger Flathead" 1966 2951.61
+"Tiger Flathead" 1967 3085.99
+"Tiger Flathead" 1968 2491.56
+"Tiger Flathead" 1969 3482.28
+"Tiger Flathead" 1970 2805.02
+"Tiger Flathead" 1971 2167.409
+"Tiger Flathead" 1972 2568.223
+"Tiger Flathead" 1973 2997.967
+"Tiger Flathead" 1974 1935.879
+"Tiger Flathead" 1975 2281.269
+"Tiger Flathead" 1976 1673.629
+"Tiger Flathead" 1977 1557.244
+"Tiger Flathead" 1978 1336.324
+"Tiger Flathead" 1979 1513.091
+"Tiger Flathead" 1980 1523.386
+"Tiger Flathead" 1981 1349.892
+"Tiger Flathead" 1982 1608.009
+"Tiger Flathead" 1983 1914.301
+"Tiger Flathead" 1984 1951.626
+"Tiger Flathead" 1985 1989.6876
+"Tiger Flathead" 1986 2052.9242
+"Tiger Flathead" 1987 2629.89179
+"Tiger Flathead" 1988 2698.884
+"Tiger Flathead" 1989 2756.515
+"Tiger Flathead" 1990 2281.893
+"Tiger Flathead" 1991 2452.616
+"Tiger Flathead" 1992 2342.995
+"Tiger Flathead" 1993 1735.961
+"Tiger Flathead" 1994 1884.907
+"Tiger Flathead" 1995 2015.83
+"Tiger Flathead" 1996 2200.996
+"Tiger Flathead" 1997 2863.834
+"Tiger Flathead" 1998 2925.153
+"Tiger Flathead" 1999 3824.425
+"Tiger Flathead" 2000 3749.686
+"Tiger Flathead" 2001 3243.822
+"Tiger Flathead" 2002 3497.586
+"Tiger Flathead" 2003 3869.673
+"Tiger Flathead" 2004 3751.902
+"Tiger Flathead" 2005 3479.448
+"Tiger Flathead" 2006 3208.647
+"Tiger Flathead" 2007 3207.073
+"Tiger Flathead" 2008 3624.663
+"Tiger Flathead" 2009 3116.417
+"Tiger Flathead" 2010 3216.231
+"Tiger Flathead" 2011 3147.901
+"Tiger Flathead" 2012 3229.956

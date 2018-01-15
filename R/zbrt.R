@@ -1,9 +1,4 @@
 
-# Read data
-system.file("data", "YELLSNEMATL.Rdata", package = "datalimited2")
-system.file("data", "BRTmodelP8.RData", package = "datalimited2")
-system.file("data", "BRTmodelP38.RData", package = "datalimited2")
-
 # Compute predictors for the Zhou-BRT catch-only stock assessment model
 catchParam <- function(catchData) {
   sid = unique(as.character(catchData$stock))
@@ -24,31 +19,31 @@ catchParam <- function(catchData) {
     nyrToCmaxR = nyrToCmax/nyr
     nyrAfterCmax = nyr-nyrToCmax
     yr.cent = yr-midYr           # regressions are based on centred year
-    line0 = lm(C~yr.cent)
+    line0 = stats::lm(C~yr.cent)
     yr1.cent = yr[1:nyrToCmax]-mean(yr[1:nyrToCmax])
-    line1 = lm(C[1:nyrToCmax]~yr1.cent)
+    line1 = stats::lm(C[1:nyrToCmax]~yr1.cent)
     yr2.cent = yr[nyrToCmax:nyr]-mean(yr[nyrToCmax:nyr])
-    line2 = lm(C[nyrToCmax:nyr]~yr2.cent)
+    line2 = stats::lm(C[nyrToCmax:nyr]~yr2.cent)
     aa0 = summary(line0)$coeff[1]; bb0 = summary(line0)$coeff[2]    #all yr
     aa1 = summary(line1)$coeff[1]; bb1 = summary(line1)$coeff[2]    #before Cmax
     aa2 = summary(line2)$coeff[1]; bb2 = summary(line2)$coeff[2]    #after Cmax
     for (j in 1:n.ab) { # periodical regressions
       yrLast.cent = yr[(nyr-j):nyr]-mean(yr[(nyr-j):nyr])
-      l.last = lm(C[(nyr-j):nyr]~yrLast.cent)                   # last several years
+      l.last = stats::lm(C[(nyr-j):nyr]~yrLast.cent)                   # last several years
       a[i,j] = summary(l.last)$coeff[1];
       b[i,j]=summary(l.last)$coeff[2]
       yrBegin.cent = yr[1:(j+1)]-mean(yr[1:(j+1)])
-      l.begin = lm(C[1:(j+1)] ~ yrBegin.cent)                  # beginning several years
+      l.begin = stats::lm(C[1:(j+1)] ~ yrBegin.cent)                  # beginning several years
       a0[i,j] = summary(l.begin)$coeff[1]
       b0[i,j] = summary(l.begin)$coeff[2] }
     # segmented regression: use yr and breakpoint is between 0-1
-    f = tryCatch(segmented(line0, seg.Z=~yr, psi=list(yr=median(yr))) , error=function(err) {})
+    f = tryCatch(segmented::segmented(line0, seg.Z=~yr, psi=list(yr=stats::median(yr))) , error=function(err) {})
     if(is.null(f)) {
       a.spline = NA; b1.spline = NA; b2.spline = NA; breakPoint = NA
     } else {
       a.spline = summary(f)$coef[1]
       b1.spline = summary(f)$coef[2]
-      slp= slope(f)
+      slp= segmented::slope(f)
       b2.spline = slp$yr[2]
       breakPoint = (round(f$psi.history[[5]],0)-yr[1] +1)/nyr
     }
@@ -125,8 +120,8 @@ zbrt <- function(year, catch){
     d[i, c("s8", "s38", "s")] <- s_out
     # Bootstrap confidence interval
     s_draws <- Sdistrib(10000, s_out$s)
-    d$s_lo[i] <- quantile(s_draws, probs=0.025)
-    d$s_hi[i] <- quantile(s_draws, probs=0.975)
+    d$s_lo[i] <- stats::quantile(s_draws, probs=0.025)
+    d$s_hi[i] <- stats::quantile(s_draws, probs=0.975)
   }
   # Calculate B/BMSY from S
   d$bbmsy <- s2bbmsy(d$s)

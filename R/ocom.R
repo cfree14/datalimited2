@@ -2,9 +2,6 @@
 # OCOM helper functions
 ################################################################################
 
-# Load example data
-system.file("data", "TIGERFLAT.Rdata", package = "datalimited2")
-
 # Derive satuation (B/K) prior between [0,1]
 Sdistrib = function(n, s_mean) {
   nv = 0 ; n.redo = 0
@@ -78,7 +75,7 @@ ocom <- function(year, catch, m){
   # r_sig2 = (2*0.41)^2*(0.0012+0.2
   r_sig = sqrt(r_sig2)
   r_mu = log(r_median)
-  ri = rlnorm(nsim, r_mu, r_sig)
+  ri = stats::rlnorm(nsim, r_mu, r_sig)
 
   # Estimate final year saturation using zBRT
   s_out <- fit_zbrt(year=year, catch=catch)
@@ -90,7 +87,7 @@ ocom <- function(year, catch, m){
   # Fit biomass dynamics model
   rs = cbind(r=ri, s=si)
   k.low = max(C); k.up=max(C)*200
-  opt = apply(rs, 1, function(x){optimize(BDM, c(k.low, k.up), r=x[["r"]], S=x[["s"]], b=1, C=C)})
+  opt = apply(rs, 1, function(x){stats::optimize(BDM, c(k.low, k.up), r=x[["r"]], S=x[["s"]], b=1, C=C)})
 
   # Combine parameter estimates
   ki = sapply(opt, '[[', 1)
@@ -101,10 +98,10 @@ ocom <- function(year, catch, m){
   # Clean parameter estimates
   kr2 = kr
   kr2[kr2$k<1.01*k.low | kr2$k>0.99*k.up | kr2$obj>0.01,] = NA # eliminate bordering effect
-  kr2 = na.omit(kr2)
+  kr2 = stats::na.omit(kr2)
 
   # Summarize parameter estimates
-  summ <- apply(kr2, 2, function(x) quantile(x, c(0.025, 0.25, 0.5, 0.75, 0.975)))[,1:4]
+  summ <- apply(kr2, 2, function(x) stats::quantile(x, c(0.025, 0.25, 0.5, 0.75, 0.975)))[,1:4]
 
   # Create biomass time series
   ########################################
@@ -118,14 +115,14 @@ ocom <- function(year, catch, m){
   # Clean and sample biological quantity draws
   oc0 <- kr
   oc1 = oc0[oc0$obj<0.01 & oc0$k>1.01*min(oc0$k) & oc0$k<0.99*max(oc0$k),] #  eliminate bordering effect
-  oc2 = oc1[oc1$k>quantile(oc1$k, 0.25) & oc1$k<quantile(oc1$k, 0.75),]
+  oc2 = oc1[oc1$k>stats::quantile(oc1$k, 0.25) & oc1$k<stats::quantile(oc1$k, 0.75),]
   smp = sample(1:nrow(oc2), ntrajs, replace=T)
 
   # Calculate median r and k
   k = oc2[smp,1]
   r = oc2[smp,2]
-  kmed = median(k)
-  rmed = median(r)
+  kmed = stats::median(k)
+  rmed = stats::median(r)
 
   # Simulate biomass trajectory for each of the selected r-k pairs
   # Trajectories begin at unfished biomass or carrying capacity (k)
@@ -142,10 +139,10 @@ ocom <- function(year, catch, m){
 
   # Biomass time series
   b_trajs <- B
-  b_quants <- t(apply(b_trajs, 1, function(x) quantile(x, quants)))
+  b_quants <- t(apply(b_trajs, 1, function(x) stats::quantile(x, quants)))
   colnames(b_quants) <- paste0("q", quants)
   b_avgs <- apply(b_trajs, 1, mean)
-  b_sds <- apply(b_trajs, 1, sd)
+  b_sds <- apply(b_trajs, 1, stats::sd)
   b_ts <- data.frame(year=yr, catch=C, b_quants, avg=b_avgs, sd=b_sds)
 
   # Create B/BMSY time series
@@ -158,17 +155,17 @@ ocom <- function(year, catch, m){
   bbmsy_trajs <- s2bbmsy(s_trajs)
 
   # Build B/BMSY dataframe
-  s_quants <- t(apply(s_trajs, 1, function(x) quantile(x, quants)))
+  s_quants <- t(apply(s_trajs, 1, function(x) stats::quantile(x, quants)))
   colnames(s_quants) <- paste0("q", quants)
   s_avgs <- apply(s_trajs, 1, mean)
-  s_sds <- apply(s_trajs, 1, sd)
+  s_sds <- apply(s_trajs, 1, stats::sd)
   s_ts <- data.frame(year=yr, catch=C, s_quants, avg=s_avgs, sd=s_sds)
 
   # Build B/BMSY dataframe
-  bbmsy_quants <- t(apply(bbmsy_trajs, 1, function(x) quantile(x, quants)))
+  bbmsy_quants <- t(apply(bbmsy_trajs, 1, function(x) stats::quantile(x, quants)))
   colnames(bbmsy_quants) <- paste0("q", quants)
   bbmsy_avgs <- apply(bbmsy_trajs, 1, mean)
-  bbmsy_sds <- apply(bbmsy_trajs, 1, sd)
+  bbmsy_sds <- apply(bbmsy_trajs, 1, stats::sd)
   bbmsy_ts <- data.frame(year=yr, catch=C, bbmsy_quants, avg=bbmsy_avgs, sd=bbmsy_sds)
 
   # Create model output

@@ -44,9 +44,6 @@
 # stb.low=NA; stb.hi=NA; int.yr=NA;
 # intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
 
-# Load example data
-system.file("data", "SOLIRIS.Rdata", package = "datalimited2")
-
 # SchaeferParallelSearch
 ################################################################################
 
@@ -56,7 +53,7 @@ SchaeferParallelSearch <- function(ni, nyr, sigR, duncert, ct, int.yr, intbio, s
   # create vectors for viable r, k and bt
   inmemorytable <- vector()
   # parallelised for the points in the r-k space
-  inmemorytable <- foreach(i = 1 : npoints, .combine='rbind', .packages='foreach', .inorder=TRUE) %dopar%{
+  inmemorytable <- foreach::foreach(i = 1 : npoints, .combine='rbind', .packages='foreach', .inorder=TRUE) %dopar%{
     nsbt = length(startbt)
     VP   <- FALSE
     for(nj in 1:nsbt) {
@@ -64,14 +61,14 @@ SchaeferParallelSearch <- function(ni, nyr, sigR, duncert, ct, int.yr, intbio, s
       bt <- vector()
       j<-startbt[nj]
       # set initial biomass, including 0.1 process error to stay within bounds
-      bt[1]=j*ki[i]*exp(rnorm(1,0, 0.1*sigR))  ## set biomass in first year
+      bt[1]=j*ki[i]*exp(stats::rnorm(1,0, 0.1*sigR))  ## set biomass in first year
       # repeat test of r-k-startbt combination to allow for different random error
       for(re in 1:ni)   {
         #loop through years in catch time series
         for (t in 1:nyr)  {  # for all years in the time series
-          xt=rnorm(1,0, sigR) # set new process error for every year
+          xt=stats::rnorm(1,0, sigR) # set new process error for every year
           zlog.sd = sqrt(log(1+(duncert)^2))
-          zt=rlnorm(1,meanlog = 0, sdlog = zlog.sd) # model the catch error as a log normal distribution.
+          zt=stats::rlnorm(1,meanlog = 0, sdlog = zlog.sd) # model the catch error as a log normal distribution.
           # calculate biomass as function of previous year's biomass plus surplus production minus catch
           bt[t+1] <- ifelse(bt[t]/ki[i] >= 0.25,
                             bt[t]+ri[i]*bt[t]*(1-bt[t]/ki[i])*exp(xt)-ct[t]*zt,
@@ -130,7 +127,7 @@ SchaeferParallelSearch <- function(ni, nyr, sigR, duncert, ct, int.yr, intbio, s
     }
   }
   ptm<-proc.time()-ptm
-  mdat <- na.omit(mdat)
+  mdat <- stats::na.omit(mdat)
   return(mdat)
 }
 
@@ -382,8 +379,8 @@ cmsy2 <- function(year, catch, resilience=NA,
   mdat.all <- matrix(data=vector(), ncol=2+nyr+1)
 
   # Get random set of r and k from log space distribution
-  ri1 = exp(runif(n, log(start.r[1]), log(start.r[2])))
-  ki1 = exp(runif(n, log(start.k[1]), log(start.k[2])))
+  ri1 = exp(stats::runif(n, log(start.r[1]), log(start.r[2])))
+  ki1 = exp(stats::runif(n, log(start.k[1]), log(start.k[2])))
 
   # 1 - Call CMSY-SchaeferMC function to preliminary explore the r-k space
   if(verbose==T){cat("First Monte Carlo filtering of r-k space with ",n," points...\n")}
@@ -402,8 +399,8 @@ cmsy2 <- function(year, catch, resilience=NA,
   if(length(kv.all[kv.all < 1.1*start.k[1] & rv.all < mean(start.r)]) > 10) {
     if(verbose==T){cat("Reducing lower bound of k, resampling area with",n,"additional points...\n")}
     start.k <- c(0.5*start.k[1],start.k[2])
-    ri1 = exp(runif(n, log(start.r[1]), log(start.r[2])))
-    ki1 = exp(runif(n, log(start.k[1]), log(start.k[2])))
+    ri1 = exp(stats::runif(n, log(start.r[1]), log(start.r[2])))
+    ki1 = exp(stats::runif(n, log(start.k[1]), log(start.k[2])))
     MCA <-  SchaeferMC(ri=ri1, ki=ki1, startbio=startbio, int.yr=int.yr, intbio=intbio, endbio=endbio, sigR=sigR,
                        pt=T, duncert=dataUncert, startbins=10, ni=ni, yr=yr, nyr=nyr, ct=ct, end.yr=end.yr, verbose=verbose)
     mdat.all <- rbind(mdat.all,MCA[[1]])
@@ -426,8 +423,8 @@ cmsy2 <- function(year, catch, resilience=NA,
         log.start.k.new[1] <- mean(c(log(start.k[1]), min(log(kv.all))))
         log.start.k.new[2] <- mean(c(log.start.k.new[2], max(log(kv.all)))) }
       n.new <- n*current.attempts #add more points
-      ri1 = exp(runif(n.new, log(start.r[1]), log(start.r[2])))
-      ki1 = exp(runif(n.new, log.start.k.new[1], log.start.k.new[2]))
+      ri1 = exp(stats::runif(n.new, log(start.r[1]), log(start.r[2])))
+      ki1 = exp(stats::runif(n.new, log.start.k.new[1], log.start.k.new[2]))
       if(verbose==T){cat("Shrinking k space: repeating Monte Carlo in the interval [",exp(log.start.k.new[1]),",",exp(log.start.k.new[2]),"]\n")}
       if(verbose==T){cat("Attempt ",current.attempts," of ",max.attempts," with ",n.new," additional points...","\n")}
       if(current.attempts==2 & n.viable.b < 50){
@@ -455,13 +452,13 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # 4 - if tip of viable r-k pairs is 'thin', do extra sampling there
   if(length(rv.all[rv.all > 0.9*start.r[2]]) < 5) {
-    l.sample.r        <- quantile(rv.all,0.6)
+    l.sample.r        <- stats::quantile(rv.all,0.6)
     add.points        <- ifelse(is.na(current.attempts)==T,n,ifelse(current.attempts==2,2*n,ifelse(length(rv.all)>500,3*n,6*n)))
     if(verbose==T){cat("Final sampling in the tip area above r =",l.sample.r,"with",add.points,"additional points...\n")}
     log.start.k.new <- c(log(0.8*min(kv.all)),log(max(kv.all[rv.all > l.sample.r])))
 
-    ri1 = exp(runif(add.points, log(l.sample.r), log(start.r[2])))
-    ki1 = exp(runif(add.points, log.start.k.new[1], log.start.k.new[2]))
+    ri1 = exp(stats::runif(add.points, log(l.sample.r), log(start.r[2])))
+    ki1 = exp(stats::runif(add.points, log.start.k.new[1], log.start.k.new[2]))
     MCA <-  SchaeferMC(ri=ri1, ki=ki1, startbio=startbio, int.yr=int.yr, intbio=intbio, endbio=endbio, sigR=sigR,
                        pt=T, duncert=duncert, startbins=10, ni=ni, yr=yr, nyr=nyr, ct=ct, end.yr=end.yr, verbose=verbose)
     mdat.all <- rbind(mdat.all,MCA[[1]])
@@ -486,14 +483,14 @@ cmsy2 <- function(year, catch, resilience=NA,
   # determine number of classes as a function of r-width
   r.width         <- (max(unique.rk[,1])-start.r[1])/(start.r[2]-start.r[1])
   classes         <- ifelse(r.width>0.8,100,ifelse(r.width>0.5,50,ifelse(r.width>0.3,25,12)))
-  hist.log.r      <- hist(x=log.rs, breaks=classes, plot=F)
+  hist.log.r      <- graphics::hist(x=log.rs, breaks=classes, plot=F)
   log.r.counts    <- hist.log.r$counts
   log.r.mids      <- hist.log.r$mids
   # get most probable log.r as 75th percentile of mids with counts > 0
-  log.r.est       <- as.numeric(quantile(log.r.mids[which(log.r.counts > 0)],0.75))
-  median.log.r    <- as.numeric(quantile(x=log.r.mids[which(log.r.counts > 0)], 0.50))
-  lcl.log.r       <- as.numeric(quantile(x=log.r.mids[which(log.r.counts > 0)], 0.5125))
-  ucl.log.r       <- as.numeric(quantile(x=log.r.mids[which(log.r.counts > 0)], 0.9875))
+  log.r.est       <- as.numeric(stats::quantile(log.r.mids[which(log.r.counts > 0)],0.75))
+  median.log.r    <- as.numeric(stats::quantile(x=log.r.mids[which(log.r.counts > 0)], 0.50))
+  lcl.log.r       <- as.numeric(stats::quantile(x=log.r.mids[which(log.r.counts > 0)], 0.5125))
+  ucl.log.r       <- as.numeric(stats::quantile(x=log.r.mids[which(log.r.counts > 0)], 0.9875))
   sd.log.r.est    <- (ucl.log.r - log.r.est) / 1.96
   r.est           <- exp(log.r.est)
   lcl.r.est       <- exp(log.r.est-1.96*sd.log.r.est)
@@ -504,9 +501,9 @@ cmsy2 <- function(year, catch, resilience=NA,
   rem.log.r      <- log(unique.rk[,1][rem])
   rem.log.k      <- log(unique.rk[,2][rem])
   # do linear regression of log k ~ log r with slope fixed to -1 (from Schaefer)
-  reg            <- lm(rem.log.k ~ 1 + offset(-1*rem.log.r))
+  reg            <- stats::lm(rem.log.k ~ 1 + offset(-1*rem.log.r))
   int.reg        <- as.numeric(reg[1])
-  sd.reg      <- sd(resid(reg))
+  sd.reg      <- stats::sd(stats::resid(reg))
   # get estimate of log(k) from y where x = log.r.est
   log.k.est      <- int.reg + (-1) * log.r.est
   # get estimates of ucl of log.k.est from y + SD where x = ucl.log.r
@@ -521,7 +518,7 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # get MSY from remaining log r-k pairs
   log.MSY.est     <- mean(rem.log.r + rem.log.k - log(4))
-  sd.log.MSY.est  <- sd(rem.log.r + rem.log.k - log(4))
+  sd.log.MSY.est  <- stats::sd(rem.log.r + rem.log.k - log(4))
   lcl.log.MSY.est <- log.MSY.est - 1.96*sd.log.MSY.est
   ucl.log.MSY.est <- log.MSY.est + 1.96*sd.log.MSY.est
   MSY.est         <- exp(log.MSY.est)
@@ -532,12 +529,12 @@ cmsy2 <- function(year, catch, resilience=NA,
   # only use biomass trajectories from r-k pairs within the confidence limits
   rem.btv.all <- mdat.all[which(mdat.all[,1] > lcl.r.est & mdat.all[,1] < ucl.r.est
                                 & mdat.all[,2] > lcl.k.est & mdat.all[,2] < ucl.k.est),3:(2+nyr+1)]
-  median.btv <- apply(rem.btv.all,2, median)
+  median.btv <- apply(rem.btv.all,2, stats::median)
   median.btv.lastyr  <- median.btv[length(median.btv)-1]
   nextyr.bt  <- median.btv[length(median.btv)]
-  lcl.btv    <- apply(rem.btv.all,2, quantile, probs=0.025)
-  q.btv      <- apply(rem.btv.all,2, quantile, probs=0.25)
-  ucl.btv    <- apply(rem.btv.all,2, quantile, probs=0.975)
+  lcl.btv    <- apply(rem.btv.all,2, stats::quantile, probs=0.025)
+  q.btv      <- apply(rem.btv.all,2, stats::quantile, probs=0.25)
+  ucl.btv    <- apply(rem.btv.all,2, stats::quantile, probs=0.975)
   lcl.median.btv.lastyr <- lcl.btv[length(lcl.btv)-1]
   ucl.median.btv.lastyr <- ucl.btv[length(lcl.btv)-1]
   lcl.nextyr.bt <- lcl.btv[length(lcl.btv)]

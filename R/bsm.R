@@ -31,7 +31,7 @@
 # library(foreach)
 # library(doParallel)
 # library(gplots)
-#
+
 # # For testing
 # # Required parameters
 # year <- SOLIRIS$yr
@@ -44,7 +44,6 @@
 # r.low=0.18; r.hi=1.02
 # stb.low=NA; stb.hi=NA; int.yr=NA;
 # intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
-
 
 # BSM function
 ################################################################################
@@ -85,10 +84,10 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Setup parallel processing
   # Use 3 chains in JAGS if more than 2 cores are available
-  n.cores <- detectCores()
-  n.chains <- ifelse(n.cores > 2,3,2)
-  cl <- makeCluster(n.cores)
-  registerDoParallel(cl, cores = n.cores)
+  # n.cores <- parallel::detectCores()
+  # n.chains <- ifelse(n.cores > 2,3,2)
+  # cl <- parallel::makeCluster(n.cores)
+  # doParallel::registerDoParallel(cl, cores = n.cores)
 
   # Set model parameters
   FullSchaefer <- F # will automatically change to TRUE if enough abundance data available
@@ -366,17 +365,17 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
     # Initialize JAGS model?
     if(btype=="biomass") {
-      j.inits     <- function(){list("r"=rnorm(1,mean=init.r,sd=0.2*init.r),
-                                     "k"=rnorm(1,mean=init.k,sd=0.1*init.k),
+      j.inits     <- function(){list("r"=stats::rnorm(1,mean=init.r,sd=0.2*init.r),
+                                     "k"=stats::rnorm(1,mean=init.k,sd=0.1*init.k),
                                      "itau2"=1000,
                                      "isigma2"=1000)}} else {
-                                       j.inits <- function(){list("r"=rnorm(1,mean=init.r,sd=0.2*init.r),
-                                                                  "k"=rnorm(1,mean=init.k,sd=0.1*init.k),
-                                                                  "q"=rnorm(1,mean=init.q,sd=0.2*init.q),
+                                       j.inits <- function(){list("r"=stats::rnorm(1,mean=init.r,sd=0.2*init.r),
+                                                                  "k"=stats::rnorm(1,mean=init.k,sd=0.1*init.k),
+                                                                  "q"=stats::rnorm(1,mean=init.q,sd=0.2*init.q),
                                                                   "itau2"=1000,
                                                                   "isigma2"=1000)}}
     # Run JAGS model
-    jags_outputs <- jags.parallel(data=jags.data,
+    jags_outputs <- R2jags::jags.parallel(data=jags.data,
                                   working.directory=NULL, inits=j.inits,
                                   parameters.to.save=jags.save.params,
                                   model.file="r2jags.bug", n.chains = n.chains,
@@ -387,34 +386,34 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
     # Extract JAGS model results
     ##########################################################
 
-    r_raw            <- as.numeric(mcmc(jags_outputs$BUGSoutput$sims.list$r))
-    k_raw            <- as.numeric(mcmc(jags_outputs$BUGSoutput$sims.list$k))
+    r_raw            <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$r))
+    k_raw            <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$k))
     # Importance sampling: only accept r-k pairs where r is near the prior range
     r_out            <- r_raw[r_raw > 0.5*start.r[1] & r_raw < 1.5 * start.r[2]]
     k_out            <- k_raw[r_raw > 0.5*start.r[1] & r_raw < 1.5 * start.r[2]]
 
     mean.log.r.jags  <- mean(log(r_out))
-    sd.log.r.jags    <- sd(log(r_out))
+    sd.log.r.jags    <- stats::sd(log(r_out))
     r.jags           <- exp(mean.log.r.jags)
     lcl.r.jags       <- exp(mean.log.r.jags - 1.96*sd.log.r.jags)
     ucl.r.jags       <- exp(mean.log.r.jags + 1.96*sd.log.r.jags)
     mean.log.k.jags  <- mean(log(k_out))
-    sd.log.k.jags    <- sd(log(k_out))
+    sd.log.k.jags    <- stats::sd(log(k_out))
     k.jags           <- exp(mean.log.k.jags)
     lcl.k.jags       <- exp(mean.log.k.jags - 1.96*sd.log.k.jags)
     ucl.k.jags       <- exp(mean.log.k.jags + 1.96*sd.log.k.jags)
     MSY.posterior     <- r_out*k_out/4 # simpler
     mean.log.MSY.jags <- mean(log(MSY.posterior))
-    sd.log.MSY.jags   <- sd(log(MSY.posterior))
+    sd.log.MSY.jags   <- stats::sd(log(MSY.posterior))
     MSY.jags          <- exp(mean.log.MSY.jags)
     lcl.MSY.jags      <- exp(mean.log.MSY.jags - 1.96*sd.log.MSY.jags)
     ucl.MSY.jags      <- exp(mean.log.MSY.jags + 1.96*sd.log.MSY.jags)
 
     # CPUE-based computations
     if(btype=="CPUE") {
-      q_out           <- as.numeric(mcmc(jags_outputs$BUGSoutput$sims.list$q))
+      q_out           <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$q))
       mean.log.q      <- mean(log(q_out))
-      sd.log.q        <- sd(log(q_out))
+      sd.log.q        <- stats::sd(log(q_out))
       mean.q          <- exp(mean.log.q)
       lcl.q           <- exp(mean.log.q-1.96*sd.log.q)
       ucl.q           <- exp(mean.log.q+1.96*sd.log.q)
@@ -430,7 +429,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
     # get relative biomass P=B/k as predicted by BSM, including predictions for years with NA abundance
     all.P    <- jags_outputs$BUGSoutput$sims.list$P # matrix with P distribution by year
-    quant.P  <- apply(all.P,2,quantile,c(0.025,0.5,0.975),na.rm=T)
+    quant.P  <- apply(all.P,2,stats::quantile,c(0.025,0.5,0.975),na.rm=T)
 
     # get k, r posterior ><>
     all.k  <- jags_outputs$BUGSoutput$sims.list$k # matrix with P distribution by year
@@ -520,13 +519,12 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                        er=Fm/Fmsy)
 
   #stop parallel processing clusters
-  stopCluster(cl)
-  stopImplicitCluster()
+  # parallel::stopCluster(cl)
+  # doParallel::stopImplicitCluster()
 
   # Assemble output
   output <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
                  r_out=r_out, k_out=k_out)
   return(output)
-
 
 }

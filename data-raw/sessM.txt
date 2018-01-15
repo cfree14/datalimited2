@@ -1,0 +1,14 @@
+"stock" "M"
+"Bight Redfish" 0.107
+"Blue Grenadier" 0.177
+"Deepwater Flathead" 0.24
+"Gemfish East" 0.38
+"Morwong East" 0.15
+"Morwong West" 0.15
+"Orange Roughy" 0.04
+"Pink Ling East" 0.2066
+"Pink Ling West" 0.2066
+"Redfish" 0.1
+"School Whiting" 0.575
+"Silver Warehou" 0.3
+"Tiger Flathead" 0.27

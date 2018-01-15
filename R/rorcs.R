@@ -1,5 +1,8 @@
 
 # For testing
+################################################################################
+
+# For testing
 # load("data/refined_orcs_approach_bct_model.Rdata")
 # scores <- c(2, # TOA 1 - Status of assessed stocks in fishery
 #             NA, # TOA 3 - Behavior affecting capture (2 or 3 only)
@@ -15,8 +18,8 @@
 #             1) # TOA 14 - Proportion of population protected
 # rorcs(scores)
 
-# Read data
-system.file("data", "refined_orcs_approach_bct_model.Rdata", package = "datalimited2")
+# rORCS function
+################################################################################
 
 #' Refined ORCS approach
 #'
@@ -79,7 +82,7 @@ rorcs <- function(scores){
                              "toa11", "toa12", "toa13", "toa14")
 
     # Predict status probabilities
-    probs <- predict(rorcs_model, newdata=scores.df, type="prob", na.action=NULL)
+    probs <- dismo::predict(rorcs_model, newdata=scores.df, type="prob", na.action=NULL)
     colnames(probs) <- c("p.under", "p.fully", "p.over")
 
     # Identify most-likely status

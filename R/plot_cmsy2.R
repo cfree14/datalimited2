@@ -38,7 +38,7 @@ plot_cmsy2 <- function(output){
   # Unpack output
   ref_pts <- output[["ref_pts"]]
   ref_ts <- output[["ref_ts"]]
-  priors <- out[["priors"]]
+  priors <- output[["priors"]]
   if(model=="cMSY"){rv <- output[["rv.all"]]}else{rv <- output[["r_out"]]}
   if(model=="cMSY"){kv <- output[["kv.all"]]}else{kv <- output[["k_out"]]}
 
