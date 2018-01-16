@@ -24,27 +24,27 @@
 # For testing
 ################################################################################
 
-# # Packages
-# library(R2jags)
-# library(coda)
-# library(parallel)
-# library(foreach)
-# library(doParallel)
-# library(gplots)
-#
-# # For testing
-# # Required parameters
-# load("data/SOLIRIS.Rda")
-# year <- SOLIRIS$yr
-# catch <- SOLIRIS$ct
-# biomass <- SOLIRIS$bt
-# btype <- "CPUE"
-# resilience <- "Medium"
-# verbose <- T
-# # Optional parameters
-# r.low=0.18; r.hi=1.02
-# stb.low=NA; stb.hi=NA; int.yr=NA;
-# intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
+# Packages
+library(R2jags)
+library(coda)
+library(parallel)
+library(foreach)
+library(doParallel)
+library(gplots)
+
+# For testing
+# Required parameters
+load("data/SOLIRIS.Rda")
+year <- SOLIRIS$yr
+catch <- SOLIRIS$ct
+biomass <- SOLIRIS$bt
+btype <- "CPUE"
+resilience <- "Medium"
+verbose <- T
+# Optional parameters
+r.low=0.18; r.hi=1.02
+stb.low=NA; stb.hi=NA; int.yr=NA;
+intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
 
 # BSM function
 ################################################################################
@@ -166,289 +166,288 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   # Bayesian analysis of catch & biomass (or CPUE) with Schaefer model
   ##############################################################################
 
-  # Fit BSM if enough biomass data is available
-  if(btype != "None" & length(bt[is.na(bt)==F])>=nab){
+  # Indicate that BSM is being fit
+  FullSchaefer <- T
 
-    # Indicate that BSM is being fit
-    FullSchaefer <- T
+  # Set inits for r-k in lower right corner of log r-k space
+  init.r      <- start.r[1]+0.8*(start.r[2]-start.r[1])
+  init.k      <- start.k[1]+0.1*(start.k[2]-start.k[1])
 
-    # Set inits for r-k in lower right corner of log r-k space
-    init.r      <- start.r[1]+0.8*(start.r[2]-start.r[1])
-    init.k      <- start.k[1]+0.1*(start.k[2]-start.k[1])
+  # Vector with no penalty (=0) if predicted biomass is within viable range, else a penalty of 10 is set
+  pen.bk = pen.F = rep(0,length(ct))
 
-    # Vector with no penalty (=0) if predicted biomass is within viable range, else a penalty of 10 is set
-    pen.bk = pen.F = rep(0,length(ct))
+  # Add biomass priors
+  b.yrs = c(1,length(start.yr:int.yr),length(start.yr:end.yr))
+  b.prior = rbind(matrix(c(startbio[1],startbio[2],intbio[1],intbio[2],endbio[1],endbio[2]),2,3),rep(0,3)) # last row includes the 0 pen
 
-    # Add biomass priors
-    b.yrs = c(1,length(start.yr:int.yr),length(start.yr:end.yr))
-    b.prior = rbind(matrix(c(startbio[1],startbio[2],intbio[1],intbio[2],endbio[1],endbio[2]),2,3),rep(0,3)) # last row includes the 0 pen
+  # Print
+  if(verbose==T){cat("Running MCMC analysis....\n")}
 
-    # Biomass-based BSM
-    ##########################################################
+  # Setup biomass-based BSM
+  ##########################################################
 
-    if(verbose==T){cat("Running MCMC analysis....\n")}
-    if(btype == "biomass"){
-      # Data to be passed on to JAGS
-      jags.data        <- c('ct','bt','nyr', 'start.r','startbio','start.k',
-                            'init.r','init.k', 'pen.bk','pen.F','b.yrs','b.prior')
-      # Parameters to be returned by JAGS
-      jags.save.params <- c('r','k','P') #
+  # Biomass BSM
+  if(btype == "biomass"){
+    # Data to be passed on to JAGS
+    jags.data        <- c('ct','bt','nyr', 'start.r','startbio','start.k',
+                          'init.r','init.k', 'pen.bk','pen.F','b.yrs','b.prior')
+    # Parameters to be returned by JAGS
+    jags.save.params <- c('r','k','P') #
 
-      # JAGS model
-      Model = "model{
-        # to avoid crash due to 0 values
-        eps<- 0.01
-        penm[1] <- 0 # no penalty for first biomass
-        Pmean[1] <- log(alpha)
-        P[1] ~ dlnorm(Pmean[1],itau2)
+    # JAGS model
+    Model = "model{
+      # to avoid crash due to 0 values
+      eps<- 0.01
+      penm[1] <- 0 # no penalty for first biomass
+      Pmean[1] <- log(alpha)
+      P[1] ~ dlnorm(Pmean[1],itau2)
 
-        for (t in 2:nyr) {
-        Pmean[t] <- ifelse(P[t-1] > 0.25,
-        log(max(P[t-1] + r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps)),  # Process equation
-        log(max(P[t-1] + 4*P[t-1]*r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps))) # assuming reduced r at B/k < 0.25
-        P[t] ~ dlnorm(Pmean[t],itau2) # Introduce process error
-        penm[t]  <- ifelse(P[t]<(eps+0.001),log(k*P[t])-log(k*(eps+0.001)),ifelse(P[t]>1,log(k*P[t])-log(k*(0.99)),0)) # penalty if Pmean is outside viable biomass
+      for (t in 2:nyr) {
+      Pmean[t] <- ifelse(P[t-1] > 0.25,
+      log(max(P[t-1] + r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps)),  # Process equation
+      log(max(P[t-1] + 4*P[t-1]*r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps))) # assuming reduced r at B/k < 0.25
+      P[t] ~ dlnorm(Pmean[t],itau2) # Introduce process error
+      penm[t]  <- ifelse(P[t]<(eps+0.001),log(k*P[t])-log(k*(eps+0.001)),ifelse(P[t]>1,log(k*P[t])-log(k*(0.99)),0)) # penalty if Pmean is outside viable biomass
 
-        }
+      }
 
-        # ><> Biomass priors/penalties are enforced as follows
-        for (i in 1:3) {
-        penb[i]  <- ifelse(P[b.yrs[i]]<b.prior[1,i],log(k*P[b.yrs[i]])-log(k*b.prior[1,i]),ifelse(P[b.yrs[i]]>b.prior[2,i],log(k*P[b.yrs[i]])-log(k*b.prior[2,i]),0))
-        b.prior[3,i] ~ dnorm(penb[i],100)
-        }
+      # ><> Biomass priors/penalties are enforced as follows
+      for (i in 1:3) {
+      penb[i]  <- ifelse(P[b.yrs[i]]<b.prior[1,i],log(k*P[b.yrs[i]])-log(k*b.prior[1,i]),ifelse(P[b.yrs[i]]>b.prior[2,i],log(k*P[b.yrs[i]])-log(k*b.prior[2,i]),0))
+      b.prior[3,i] ~ dnorm(penb[i],100)
+      }
 
-        for (t in 1:nyr){
-        Fpen[t]   <- ifelse(ct[t]>(0.9*k*P[t]),ct[t]-(0.9*k*P[t]),0) #><> Penalty term on F > 1, i.e. ct>B
-        pen.F[t]  ~ dnorm(Fpen[t],1000)
-        pen.bk[t] ~ dnorm(penm[t],10000)
-        Bm[t] <- log(P[t]*k);
-        bt[t]    ~ dlnorm(Bm[t],isigma2);
-        }
+      for (t in 1:nyr){
+      Fpen[t]   <- ifelse(ct[t]>(0.9*k*P[t]),ct[t]-(0.9*k*P[t]),0) #><> Penalty term on F > 1, i.e. ct>B
+      pen.F[t]  ~ dnorm(Fpen[t],1000)
+      pen.bk[t] ~ dnorm(penm[t],10000)
+      Bm[t] <- log(P[t]*k);
+      bt[t]    ~ dlnorm(Bm[t],isigma2);
+      }
 
-        # priors
-        # search in the alpha space from the center of the range. Allow high variability
-        log.alpha               <- log((startbio[1]+startbio[2])/2)
-        sd.log.alpha            <- (log.alpha-log(startbio[1]))/5
-        tau.log.alpha           <- pow(sd.log.alpha,-2)
-        alpha                   ~  dlnorm(log.alpha,tau.log.alpha)
+      # priors
+      # search in the alpha space from the center of the range. Allow high variability
+      log.alpha               <- log((startbio[1]+startbio[2])/2)
+      sd.log.alpha            <- (log.alpha-log(startbio[1]))/5
+      tau.log.alpha           <- pow(sd.log.alpha,-2)
+      alpha                   ~  dlnorm(log.alpha,tau.log.alpha)
 
-        # search in the k space from 20% of the range
-        log.km              <- log(start.k[1]+0.2*(start.k[2]-start.k[1]))
-        sd.log.k            <- (log.km-log(start.k[1]))/4
-        tau.log.k           <- pow(sd.log.k,-2)
-        k                   ~  dlnorm(log.km,tau.log.k)
+      # search in the k space from 20% of the range
+      log.km              <- log(start.k[1]+0.2*(start.k[2]-start.k[1]))
+      sd.log.k            <- (log.km-log(start.k[1]))/4
+      tau.log.k           <- pow(sd.log.k,-2)
+      k                   ~  dlnorm(log.km,tau.log.k)
 
-        # define process (tau) and observation (sigma) variances as inversegamma priors
-        itau2 ~ dgamma(2,0.01)
-        tau2  <- 1/itau2
-        tau   <- pow(tau2,0.5)
+      # define process (tau) and observation (sigma) variances as inversegamma priors
+      itau2 ~ dgamma(2,0.01)
+      tau2  <- 1/itau2
+      tau   <- pow(tau2,0.5)
 
-        isigma2 ~ dgamma(2,0.01)
-        sigma2 <- 1/isigma2
-        sigma <- pow(sigma2,0.5)
+      isigma2 ~ dgamma(2,0.01)
+      sigma2 <- 1/isigma2
+      sigma <- pow(sigma2,0.5)
 
-        log.rm              <- mean(log(start.r))
-        sigma.log.r         <- abs(log.rm - log(start.r[1]))/2
-        tau.log.r           <- pow(sigma.log.r,-2)
-        r                   ~  dlnorm(log.rm,tau.log.r)
-      }"
+      log.rm              <- mean(log(start.r))
+      sigma.log.r         <- abs(log.rm - log(start.r[1]))/2
+      tau.log.r           <- pow(sigma.log.r,-2)
+      r                   ~  dlnorm(log.rm,tau.log.r)
+    }"
 
-    # Run CPUE-based BSM
-    ##########################################################
+  # Setup CPUE-based BSM
+  ##########################################################
 
-    # Run CPUE-based BSM
+  # CPUE BSM
+  }else{
+
+    # Catchability stuff
+    ########################################
+
+    # Expert-specified catchability (q)
+    if(is.na(q.start)==F & is.na(q.end)==F){
+      mean.last.ct      <-mean(ct[yr >= q.start & yr <= q.end], na.rm=T) # get mean catch of indicated years
+      mean.last.cpue    <-mean(bt[yr >= q.start & yr <= q.end], na.rm=T) # get mean of CPUE of indicated years
+    # Default catchability (q)
+    # get prior range for q from mean catch and mean CPUE in recent years
     }else{
-
-      # Catchability stuff
-      ########################################
-
-      # Expert-specified catchability (q)
-      if(is.na(q.start)==F & is.na(q.end)==F){
-        mean.last.ct      <-mean(ct[yr >= q.start & yr <= q.end], na.rm=T) # get mean catch of indicated years
-        mean.last.cpue    <-mean(bt[yr >= q.start & yr <= q.end], na.rm=T) # get mean of CPUE of indicated years
-      # Default catchability (q)
-      # get prior range for q from mean catch and mean CPUE in recent years
-      }else{
-        lyr               <- ifelse(mean(start.r)>=0.5,5,10)  # determine number of last years to use, 5 for normal and 10 for slow growing fish
-        mean.last.ct      <-mean(ct[(nyr-lyr):nyr],na.rm=T) # get mean catch of last years
-        mean.last.cpue    <-mean(bt[(nyr-lyr):nyr],na.rm=T) # get mean of CPUE of last years
-      }
-      gm.start.r      <- exp(mean(log(start.r))) # get geometric mean of prior r range
-      if(mean(endbio) >= 0.5) {  # if biomass is high
-        q.1           <- mean.last.cpue*0.25*gm.start.r/mean.last.ct
-        q.2           <- mean.last.cpue*0.5*start.r[2]/mean.last.ct
-      } else {
-        q.1           <- mean.last.cpue*0.5*gm.start.r/mean.last.ct
-        q.2           <- mean.last.cpue*start.r[2]/mean.last.ct
-      }
-      q.prior         <- c(q.1,q.2)
-      init.q          <- mean(q.prior)
-
-      # Setup JAGS model
-      ########################################
-
-      # Data to be passed on to JAGS
-      jags.data        <- c('ct','bt','nyr', 'start.r', 'start.k', 'startbio', 'q.prior',
-                            'init.q','init.r','init.k','pen.bk','pen.F','b.yrs','b.prior')
-      # Parameters to be returned by JAGS
-      jags.save.params <- c('r','k','q', 'P')
-
-      # JAGS model
-      Model = "model{
-        # to reduce chance of non-convergence, Pmean[t] values are forced >= eps
-        eps<-0.01
-        penm[1] <- 0 # no penalty for first biomass
-        Pmean[1] <- log(alpha)
-        P[1] ~ dlnorm(Pmean[1],itau2)
-
-        for (t in 2:nyr) {
-        Pmean[t] <- ifelse(P[t-1] > 0.25,
-        log(max(P[t-1] + r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps)),  # Process equation
-        log(max(P[t-1] + 4*P[t-1]*r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps))) # assuming reduced r at B/k < 0.25
-        P[t] ~ dlnorm(Pmean[t],itau2) # Introduce process error
-        penm[t]  <- ifelse(P[t]<(eps+0.001),log(q*k*P[t])-log(q*k*(eps+0.001)),ifelse(P[t]>1,log(q*k*P[t])-log(q*k*(0.99)),0)) # penalty if Pmean is outside viable biomass
-        }
-
-        # ><> Biomass priors/penalties are enforced as follows
-        for (i in 1:3) {
-        penb[i]  <- ifelse(P[b.yrs[i]]<b.prior[1,i],log(q*k*P[b.yrs[i]])-log(q*k*b.prior[1,i]),ifelse(P[b.yrs[i]]>b.prior[2,i],log(q*k*P[b.yrs[i]])-log(q*k*b.prior[2,i]),0))
-        b.prior[3,i] ~ dnorm(penb[i],100)
-        }
-
-        for (t in 1:nyr){
-        Fpen[t]   <- ifelse(ct[t]>(0.9*k*P[t]),ct[t]-(0.9*k*P[t]),0) #><> Penalty term on F > 1, i.e. ct>B
-        pen.F[t]  ~ dnorm(Fpen[t],1000)
-        pen.bk[t] ~ dnorm(penm[t],10000)
-        cpuem[t]  <- log(q*P[t]*k);
-        bt[t]     ~ dlnorm(cpuem[t],isigma2);
-        }
-
-        # priors
-        log.alpha               <- log((startbio[1]+startbio[2])/2) # needed for fit of first biomass
-        sd.log.alpha            <- (log.alpha-log(startbio[1]))/4
-        tau.log.alpha           <- pow(sd.log.alpha,-2)
-        alpha                   ~  dlnorm(log.alpha,tau.log.alpha)
-
-        # search in the k space starting from 20% of the range
-        log.km              <- log(start.k[1]+0.2*(start.k[2]-start.k[1]))
-        sd.log.k            <- (log.km-log(start.k[1]))/4
-        tau.log.k           <- pow(sd.log.k,-2)
-        k                   ~  dlnorm(log.km,tau.log.k)
-
-        # set realistic prior for q
-        log.qm              <- mean(log(q.prior))
-        sd.log.q            <- (log.qm-log(q.prior[1]))/4
-        tau.log.q           <- pow(sd.log.q,-2)
-        q                   ~  dlnorm(log.qm,tau.log.q)
-
-        # define process (tau) and observation (sigma) variances as inversegamma prios
-        itau2 ~ dgamma(4,0.01)
-        tau2  <- 1/itau2
-        tau   <- pow(tau2,0.5)
-
-        isigma2 ~ dgamma(2,0.01)
-        sigma2 <- 1/isigma2
-        sigma <- pow(sigma2,0.5)
-
-        log.rm              <- mean(log(start.r))
-        sigma.log.r         <- abs(log.rm - log(start.r[1]))/2
-        tau.log.r           <- pow(sigma.log.r,-2)
-        r                   ~  dlnorm(log.rm,tau.log.r)
-      }" # end of JAGS model for CPUE
-
-    } # end of else loop for Schaefer with CPUE
-
-    # Run JAGS model
-    ##########################################################
-
-    # Write JAGS model to file
-    cat(Model, file="R/r2jags.bug")
-
-    # Initialize JAGS model?
-    if(btype=="biomass") {
-      j.inits     <- function(){list("r"=stats::rnorm(1,mean=init.r,sd=0.2*init.r),
-                                     "k"=stats::rnorm(1,mean=init.k,sd=0.1*init.k),
-                                     "itau2"=1000,
-                                     "isigma2"=1000)}} else {
-                                       j.inits <- function(){list("r"=stats::rnorm(1,mean=init.r,sd=0.2*init.r),
-                                                                  "k"=stats::rnorm(1,mean=init.k,sd=0.1*init.k),
-                                                                  "q"=stats::rnorm(1,mean=init.q,sd=0.2*init.q),
-                                                                  "itau2"=1000,
-                                                                  "isigma2"=1000)}}
-    # Run JAGS model
-    jags_outputs <- R2jags::jags.parallel(data=jags.data,
-                                  working.directory="R", inits=j.inits,
-                                  parameters.to.save=jags.save.params,
-                                  model.file="r2jags.bug", n.chains = n.chains,
-                                  n.burnin = 30000, n.thin = 10,
-                                  n.iter = 60000)
-
-
-    # Extract JAGS model results
-    ##########################################################
-
-    r_raw            <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$r))
-    k_raw            <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$k))
-    # Importance sampling: only accept r-k pairs where r is near the prior range
-    r_out            <- r_raw[r_raw > 0.5*start.r[1] & r_raw < 1.5 * start.r[2]]
-    k_out            <- k_raw[r_raw > 0.5*start.r[1] & r_raw < 1.5 * start.r[2]]
-
-    mean.log.r.jags  <- mean(log(r_out))
-    sd.log.r.jags    <- stats::sd(log(r_out))
-    r.jags           <- exp(mean.log.r.jags)
-    lcl.r.jags       <- exp(mean.log.r.jags - 1.96*sd.log.r.jags)
-    ucl.r.jags       <- exp(mean.log.r.jags + 1.96*sd.log.r.jags)
-    mean.log.k.jags  <- mean(log(k_out))
-    sd.log.k.jags    <- stats::sd(log(k_out))
-    k.jags           <- exp(mean.log.k.jags)
-    lcl.k.jags       <- exp(mean.log.k.jags - 1.96*sd.log.k.jags)
-    ucl.k.jags       <- exp(mean.log.k.jags + 1.96*sd.log.k.jags)
-    MSY.posterior     <- r_out*k_out/4 # simpler
-    mean.log.MSY.jags <- mean(log(MSY.posterior))
-    sd.log.MSY.jags   <- stats::sd(log(MSY.posterior))
-    MSY.jags          <- exp(mean.log.MSY.jags)
-    lcl.MSY.jags      <- exp(mean.log.MSY.jags - 1.96*sd.log.MSY.jags)
-    ucl.MSY.jags      <- exp(mean.log.MSY.jags + 1.96*sd.log.MSY.jags)
-
-    # CPUE-based computations
-    if(btype=="CPUE") {
-      q_out           <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$q))
-      mean.log.q      <- mean(log(q_out))
-      sd.log.q        <- stats::sd(log(q_out))
-      mean.q          <- exp(mean.log.q)
-      lcl.q           <- exp(mean.log.q-1.96*sd.log.q)
-      ucl.q           <- exp(mean.log.q+1.96*sd.log.q)
-      F.bt.cpue       <- mean.q*ct.raw/bt
-      Fmsy.cpue       <- r.jags/2
+      lyr               <- ifelse(mean(start.r)>=0.5,5,10)  # determine number of last years to use, 5 for normal and 10 for slow growing fish
+      mean.last.ct      <-mean(ct[(nyr-lyr):nyr],na.rm=T) # get mean catch of last years
+      mean.last.cpue    <-mean(bt[(nyr-lyr):nyr],na.rm=T) # get mean of CPUE of last years
     }
-
-    # get F from observed biomass
-    if(btype == "biomass"){
-      F.bt       <- ct.raw/bt
-      Fmsy.bt    <- r.jags/2
+    gm.start.r      <- exp(mean(log(start.r))) # get geometric mean of prior r range
+    if(mean(endbio) >= 0.5) {  # if biomass is high
+      q.1           <- mean.last.cpue*0.25*gm.start.r/mean.last.ct
+      q.2           <- mean.last.cpue*0.5*start.r[2]/mean.last.ct
+    } else {
+      q.1           <- mean.last.cpue*0.5*gm.start.r/mean.last.ct
+      q.2           <- mean.last.cpue*start.r[2]/mean.last.ct
     }
+    q.prior         <- c(q.1,q.2)
+    init.q          <- mean(q.prior)
 
-    # get relative biomass P=B/k as predicted by BSM, including predictions for years with NA abundance
-    all.P    <- jags_outputs$BUGSoutput$sims.list$P # matrix with P distribution by year
-    quant.P  <- apply(all.P,2,stats::quantile,c(0.025,0.5,0.975),na.rm=T)
+    # Setup JAGS model
+    ########################################
 
-    # get k, r posterior ><>
-    all.k  <- jags_outputs$BUGSoutput$sims.list$k # matrix with P distribution by year
-    all.r  <- jags_outputs$BUGSoutput$sims.list$r # matrix with P distribution by year
+    # Data to be passed on to JAGS
+    jags.data        <- c('ct','bt','nyr', 'start.r', 'start.k', 'startbio', 'q.prior',
+                          'init.q','init.r','init.k','pen.bk','pen.F','b.yrs','b.prior')
+    # Parameters to be returned by JAGS
+    jags.save.params <- c('r','k','q', 'P')
 
-    # get B/Bmys posterior
-    all.b_bmsy=NULL
-    for(t in 1:ncol(all.P)){
-      all.b_bmsy  <- cbind(all.b_bmsy,all.P[,t]*2)}
+    # JAGS model
+    Model = "model{
+      # to reduce chance of non-convergence, Pmean[t] values are forced >= eps
+      eps<-0.01
+      penm[1] <- 0 # no penalty for first biomass
+      Pmean[1] <- log(alpha)
+      P[1] ~ dlnorm(Pmean[1],itau2)
 
-    # get F/Fmys posterior ><>
-    all.F_Fmsy=NULL
-    for(t in 1:ncol(all.P)){
-      all.F_Fmsy<- cbind(all.F_Fmsy,(ct.raw[t]/(all.P[,t]*all.k))/ifelse(all.P[,t]>0.25,all.r/2,all.r/2*4*all.P[,t]))}
+      for (t in 2:nyr) {
+      Pmean[t] <- ifelse(P[t-1] > 0.25,
+      log(max(P[t-1] + r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps)),  # Process equation
+      log(max(P[t-1] + 4*P[t-1]*r*P[t-1]*(1-P[t-1]) - ct[t-1]/k,eps))) # assuming reduced r at B/k < 0.25
+      P[t] ~ dlnorm(Pmean[t],itau2) # Introduce process error
+      penm[t]  <- ifelse(P[t]<(eps+0.001),log(q*k*P[t])-log(q*k*(eps+0.001)),ifelse(P[t]>1,log(q*k*P[t])-log(q*k*(0.99)),0)) # penalty if Pmean is outside viable biomass
+      }
 
-  } # end of MCMC Schaefer loop
+      # ><> Biomass priors/penalties are enforced as follows
+      for (i in 1:3) {
+      penb[i]  <- ifelse(P[b.yrs[i]]<b.prior[1,i],log(q*k*P[b.yrs[i]])-log(q*k*b.prior[1,i]),ifelse(P[b.yrs[i]]>b.prior[2,i],log(q*k*P[b.yrs[i]])-log(q*k*b.prior[2,i]),0))
+      b.prior[3,i] ~ dnorm(penb[i],100)
+      }
 
-  # EXTRACT RESULTS
+      for (t in 1:nyr){
+      Fpen[t]   <- ifelse(ct[t]>(0.9*k*P[t]),ct[t]-(0.9*k*P[t]),0) #><> Penalty term on F > 1, i.e. ct>B
+      pen.F[t]  ~ dnorm(Fpen[t],1000)
+      pen.bk[t] ~ dnorm(penm[t],10000)
+      cpuem[t]  <- log(q*P[t]*k);
+      bt[t]     ~ dlnorm(cpuem[t],isigma2);
+      }
+
+      # priors
+      log.alpha               <- log((startbio[1]+startbio[2])/2) # needed for fit of first biomass
+      sd.log.alpha            <- (log.alpha-log(startbio[1]))/4
+      tau.log.alpha           <- pow(sd.log.alpha,-2)
+      alpha                   ~  dlnorm(log.alpha,tau.log.alpha)
+
+      # search in the k space starting from 20% of the range
+      log.km              <- log(start.k[1]+0.2*(start.k[2]-start.k[1]))
+      sd.log.k            <- (log.km-log(start.k[1]))/4
+      tau.log.k           <- pow(sd.log.k,-2)
+      k                   ~  dlnorm(log.km,tau.log.k)
+
+      # set realistic prior for q
+      log.qm              <- mean(log(q.prior))
+      sd.log.q            <- (log.qm-log(q.prior[1]))/4
+      tau.log.q           <- pow(sd.log.q,-2)
+      q                   ~  dlnorm(log.qm,tau.log.q)
+
+      # define process (tau) and observation (sigma) variances as inversegamma prios
+      itau2 ~ dgamma(4,0.01)
+      tau2  <- 1/itau2
+      tau   <- pow(tau2,0.5)
+
+      isigma2 ~ dgamma(2,0.01)
+      sigma2 <- 1/isigma2
+      sigma <- pow(sigma2,0.5)
+
+      log.rm              <- mean(log(start.r))
+      sigma.log.r         <- abs(log.rm - log(start.r[1]))/2
+      tau.log.r           <- pow(sigma.log.r,-2)
+      r                   ~  dlnorm(log.rm,tau.log.r)
+    }" # end of JAGS model for CPUE
+
+  } # end of else loop for Schaefer with CPUE
+
+  # Run JAGS model
+  ##########################################################
+
+  # Write JAGS model to temporary file
+  jags_file <- paste(tempdir(), "r2jags.bug", sep="/")
+  cat(Model, file=jags_file)
+
+  # Initialize JAGS model?
+  if(btype=="biomass") {
+    j.inits     <- function(){list("r"=stats::rnorm(1,mean=init.r,sd=0.2*init.r),
+                                   "k"=stats::rnorm(1,mean=init.k,sd=0.1*init.k),
+                                   "itau2"=1000,
+                                   "isigma2"=1000)}} else {
+                                     j.inits <- function(){list("r"=stats::rnorm(1,mean=init.r,sd=0.2*init.r),
+                                                                "k"=stats::rnorm(1,mean=init.k,sd=0.1*init.k),
+                                                                "q"=stats::rnorm(1,mean=init.q,sd=0.2*init.q),
+                                                                "itau2"=1000,
+                                                                "isigma2"=1000)}}
+  # Run JAGS model
+  jags_outputs <- R2jags::jags.parallel(data=jags.data,
+                                working.directory=NULL, inits=j.inits,
+                                parameters.to.save=jags.save.params,
+                                model.file=jags_file, n.chains = n.chains,
+                                n.burnin = 30000, n.thin = 10,
+                                n.iter = 60000)
+
+
+  # Extract JAGS model results
+  ##########################################################
+
+  r_raw            <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$r))
+  k_raw            <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$k))
+  # Importance sampling: only accept r-k pairs where r is near the prior range
+  r_out            <- r_raw[r_raw > 0.5*start.r[1] & r_raw < 1.5 * start.r[2]]
+  k_out            <- k_raw[r_raw > 0.5*start.r[1] & r_raw < 1.5 * start.r[2]]
+
+  mean.log.r.jags  <- mean(log(r_out))
+  sd.log.r.jags    <- stats::sd(log(r_out))
+  r.jags           <- exp(mean.log.r.jags)
+  lcl.r.jags       <- exp(mean.log.r.jags - 1.96*sd.log.r.jags)
+  ucl.r.jags       <- exp(mean.log.r.jags + 1.96*sd.log.r.jags)
+  mean.log.k.jags  <- mean(log(k_out))
+  sd.log.k.jags    <- stats::sd(log(k_out))
+  k.jags           <- exp(mean.log.k.jags)
+  lcl.k.jags       <- exp(mean.log.k.jags - 1.96*sd.log.k.jags)
+  ucl.k.jags       <- exp(mean.log.k.jags + 1.96*sd.log.k.jags)
+  MSY.posterior     <- r_out*k_out/4 # simpler
+  mean.log.MSY.jags <- mean(log(MSY.posterior))
+  sd.log.MSY.jags   <- stats::sd(log(MSY.posterior))
+  MSY.jags          <- exp(mean.log.MSY.jags)
+  lcl.MSY.jags      <- exp(mean.log.MSY.jags - 1.96*sd.log.MSY.jags)
+  ucl.MSY.jags      <- exp(mean.log.MSY.jags + 1.96*sd.log.MSY.jags)
+
+  # CPUE-based computations
+  if(btype=="CPUE") {
+    q_out           <- as.numeric(coda::mcmc(jags_outputs$BUGSoutput$sims.list$q))
+    mean.log.q      <- mean(log(q_out))
+    sd.log.q        <- stats::sd(log(q_out))
+    mean.q          <- exp(mean.log.q)
+    lcl.q           <- exp(mean.log.q-1.96*sd.log.q)
+    ucl.q           <- exp(mean.log.q+1.96*sd.log.q)
+    F.bt.cpue       <- mean.q*ct.raw/bt
+    Fmsy.cpue       <- r.jags/2
+  }
+
+  # get F from observed biomass
+  if(btype == "biomass"){
+    F.bt       <- ct.raw/bt
+    Fmsy.bt    <- r.jags/2
+  }
+
+  # get relative biomass P=B/k as predicted by BSM, including predictions for years with NA abundance
+  all.P    <- jags_outputs$BUGSoutput$sims.list$P # matrix with P distribution by year
+  quant.P  <- apply(all.P,2,stats::quantile,c(0.025,0.5,0.975),na.rm=T)
+
+  # get k, r posterior ><>
+  all.k  <- jags_outputs$BUGSoutput$sims.list$k # matrix with P distribution by year
+  all.r  <- jags_outputs$BUGSoutput$sims.list$r # matrix with P distribution by year
+
+  # get B/Bmys posterior
+  all.b_bmsy=NULL
+  for(t in 1:ncol(all.P)){
+    all.b_bmsy  <- cbind(all.b_bmsy,all.P[,t]*2)}
+
+  # get F/Fmys posterior ><>
+  all.F_Fmsy=NULL
+  for(t in 1:ncol(all.P)){
+    all.F_Fmsy<- cbind(all.F_Fmsy,(ct.raw[t]/(all.P[,t]*all.k))/ifelse(all.P[,t]>0.25,all.r/2,all.r/2*4*all.P[,t]))}
+
+  # Organize results
   ##############################################################################
 
   # Get management results
@@ -488,7 +487,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
     }
   }
 
-  # COLLECT RESULTS FOR OUTPUT
+  # Format results for output
   ##############################################################################
 
   # Refence points dataframe
