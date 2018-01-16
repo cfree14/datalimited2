@@ -362,8 +362,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   ##########################################################
 
   # Write JAGS model to temporary file
-  jags_file <- paste(tempdir(), "r2jags.bug", sep="/")
-  cat(Model, file=jags_file)
+  cat(Model, file="./r2jags.bug")
 
   # Initialize JAGS model?
   if(btype=="biomass") {
@@ -380,7 +379,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   jags_outputs <- R2jags::jags.parallel(data=jags.data,
                                 working.directory=NULL, inits=j.inits,
                                 parameters.to.save=jags.save.params,
-                                model.file=jags_file, n.chains = n.chains,
+                                model.file="r2jags.bug", n.chains = n.chains,
                                 n.burnin = 30000, n.thin = 10,
                                 n.iter = 60000)
 
