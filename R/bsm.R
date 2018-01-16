@@ -24,27 +24,27 @@
 # For testing
 ################################################################################
 
-# Packages
-library(R2jags)
-library(coda)
-library(parallel)
-library(foreach)
-library(doParallel)
-library(gplots)
-
-# For testing
-# Required parameters
-load("data/SOLIRIS.Rda")
-year <- SOLIRIS$yr
-catch <- SOLIRIS$ct
-biomass <- SOLIRIS$bt
-btype <- "CPUE"
-resilience <- "Medium"
-verbose <- T
-# Optional parameters
-r.low=0.18; r.hi=1.02
-stb.low=NA; stb.hi=NA; int.yr=NA;
-intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
+# # Packages
+# library(R2jags)
+# library(coda)
+# library(parallel)
+# library(foreach)
+# library(doParallel)
+# library(gplots)
+#
+# # For testing
+# # Required parameters
+# load("data/SOLIRIS.Rda")
+# year <- SOLIRIS$yr
+# catch <- SOLIRIS$ct
+# biomass <- SOLIRIS$bt
+# btype <- "CPUE"
+# resilience <- "Medium"
+# verbose <- T
+# # Optional parameters
+# r.low=0.18; r.hi=1.02
+# stb.low=NA; stb.hi=NA; int.yr=NA;
+# intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
 
 # BSM function
 ################################################################################
