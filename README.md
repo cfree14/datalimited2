@@ -4,12 +4,12 @@ datalimited2: More stock assessment methods for data-limited fisheries
 Installation
 ------------
 
-Before installing datalimited2, you will need to install [JAGS](http://mcmc-jags.sourceforge.net) (for cMSY) and a [C++ compiler](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) (for installing packages using "devtools"; Xcode for Macs, RTools for Windows).
+Before installing datalimited2, you will need to install [JAGS](http://mcmc-jags.sourceforge.net) (for cMSY) and a [C++ compiler](https://support.rstudio.com/hc/en-us/articles/200486498-Package-Development-Prerequisites) (i.e., Xcode for Macs, RTools for Windows; for installing packages using the "devtools" package).
 
-The R package datalimited2 can then be installed from GitHub with:
+The "datalimited2" R package can then be installed from GitHub with:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("cfree14/datalimited2")
 ```
 
