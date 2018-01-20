@@ -16,7 +16,7 @@ plot_ocom <- function(output){
   s_final <- s_ts$q0.5[nrow(s_ts)]
 
   # Plot settings
-  par(mfrow=c(2,3))
+  par(mfrow=c(2,3), xpd=NA)
 
   # A. Catch
   #################################
@@ -96,7 +96,7 @@ plot_ocom <- function(output){
   xmax <- ceiling(max(s_ts$year) / 10) * 10
   plot(q0.5 ~ year, s_ts, type="n", bty="n", las=1,
        xlim=c(xmin, xmax), ylim=c(0,1), xlab="", ylab="Saturation",
-       main="D. Saturation")
+       main="D. Saturation (B/K)")
   # Add randomly selected trajectories
   for(i in 1:ncol(s_trajs)){lines(x=s_ts$year, y=s_trajs[,i], col="grey70")}
   # Add median and 95% CI trajectories

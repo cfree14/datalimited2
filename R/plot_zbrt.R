@@ -6,7 +6,7 @@ plot_zbrt <- function(output){
   output <- na.omit(output[["ts"]])
 
   # Plot settings
-  par(mfrow=c(2,2))
+  par(mfrow=c(2,2), xpd=NA)
 
   # Catch
   #################################
@@ -26,8 +26,8 @@ plot_zbrt <- function(output){
   xmin <- floor(min(output$year) / 10) * 10
   xmax <- ceiling(max(output$year) / 10) * 10
   plot(s ~ year, output, bty="n", type="n", las=1,
-       xlim=c(xmin, xmax), ylim=c(0,1), xlab="", ylab="Saturation (B/k)",
-       main="B. Saturation")
+       xlim=c(xmin, xmax), ylim=c(0,1), xlab="", ylab="Saturation",
+       main="B. Saturation (B/K)")
   # Add CI shading
   polygon(x=c(output$year, rev(output$year)),
           y=c(output$s_lo, rev(output$s_hi)), col="grey80", border=F)
@@ -62,7 +62,6 @@ plot_zbrt <- function(output){
   lines(x=c(xmin, xmax), y=c(0.5, 0.5), lty=3)
   # Label end year B/BMSY
   text(x=yr_final, y=bbmsy_final, label=round(bbmsy_final,2), pos=4)
-
 
 }
 
