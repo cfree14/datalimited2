@@ -23,8 +23,8 @@
 
 #' Refined ORCS approach
 #'
-#' Predicts stock status (i.e., under, fully, or overexploited) using
-#' the refined ORCS approach from Free et al. 2017.
+#' Estimates stock status (i.e., under, fully, or overexploited) from expert
+#' knowledge using the refined ORCS approach from Free et al. 2017.
 #'
 #' @param scores A numeric vector of length twelve containing scores for the
 #' following "Table of Attributes" questions:
