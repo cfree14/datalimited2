@@ -9,7 +9,7 @@
   \item{Stock}{stock id}
   \item{yr}{year}
   \item{ct}{catch, in metric tons}
-  \item{ct}{biomass, in metric tons}
+  \item{bt}{biomass, in metric tons}
 }}
 \source{
 Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)

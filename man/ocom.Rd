@@ -14,20 +14,20 @@ ocom(year, catch, m)
 \item{m}{Natural mortality (1/yr)}
 }
 \value{
-A list with the following elements: (1) time series of B/BMSY estimates;
+A list containing the following elements: (1) time series of B/BMSY estimates;
 (2) 1000 randomly selected biomass trajectories; (3) 1000 corresponding B/BMSY
 trajectories; (4) estimates of biological quanties r, k, MSY, S; and (5) the
 10,000 draws underpinning these values.
 }
 \description{
 Estimates saturation (B/K) and stock status (B/BMSY) time series and
-other biological quantities (e.g., r, k, MSY, final year saturation) from a time
-series of catch and a natural mortality (M) estimate using the optimized
+other biological quantities (i.e., r, k, MSY, final year saturation) from a time
+series of catch and natural mortality (M) estimate using the optimized
 catch-only model (OCOM) from Zhou et al. (2017).
 }
 \examples{
 output <- ocom(year=TIGERFLAT$yr, catch=TIGERFLAT$catch, m=0.27)
-plot_ocom(output)
+plot_dlm(output)
 }
 \references{
 Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC

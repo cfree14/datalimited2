@@ -28,8 +28,8 @@ following "Table of Attributes" questions:
 Stock status (i.e., under, fully, or overexploited)
 }
 \description{
-Predicts stock status (i.e., under, fully, or overexploited) using
-the refined ORCS approach from Free et al. 2017.
+Estimates stock status (i.e., under, fully, or overexploited) from expert
+knowledge using the refined ORCS approach from Free et al. 2017.
 }
 \examples{
 scores <- c(1, 2, NA, 2, 2, 3, 1.93, 2, 1, 2, 1, 3)

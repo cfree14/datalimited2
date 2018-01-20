@@ -6,16 +6,6 @@
 \usage{
 plot_zbrt(output)
 }
-\arguments{
-\item{output}{Output from the zBRT model (see ?zbrt)}
-}
-\value{
-Plots
-}
 \description{
 Plot zBRT results
-}
-\examples{
-output <- zbrt(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc)
-plot_zbrt(output)
 }

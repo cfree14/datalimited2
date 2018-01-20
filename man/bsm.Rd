@@ -37,14 +37,13 @@ bsm(year, catch, biomass, btype, resilience = NA, r.low = NA, r.hi = NA,
 A time series of B/BSMY estimates and other stuff
 }
 \description{
-Estimates B/BMSY time series and other biological quantities using only
-a time series of catch and a resilience estimate using the Bayesian surplus
+Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY)
+from a time series of catch and a resilience estimate using the Bayesian surplus
 produciton model from Froese et al. (2017).
 }
 \examples{
 output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
-plot_cmsy2(output)
-plot_cmsy2_mgmt(output)
+plot_dlm(output)
 }
 \references{
 Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)

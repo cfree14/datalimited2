@@ -30,22 +30,21 @@ cmsy2(year, catch, resilience = NA, r.low = NA, r.hi = NA, stb.low = NA,
 \item{verbose}{Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)}
 }
 \value{
-A list of length six with the following elements:
-(1) A dataframe with biological quantity / reference point estimates with 95% confidence intervals;
-(2) A dataframe with B/BMSY and reference point time series with 95% confidence intervals;
-(3) A dataframe with the priors used in the cMSY analysis;
-(4) A vector with the viable r values;
-(5) A vector with the viable k values;
-(6) A vector with the viable saturation values.
+A list containing the following elements:
+(1) ref_pts - A dataframe with biological quantity / reference point estimates with 95% confidence intervals;
+(2) ref_ts - A dataframe with B/BMSY and reference point time series with 95% confidence intervals;
+(3) priors - A dataframe with the priors used in the cMSY analysis;
+(4) rv.all - A vector with the viable r values;
+(5) kv.all - A vector with the viable k values;
+(6) btv.all - A dataframe with the biomass trajectories produced by the viable r/k pairs.
 }
 \description{
-Estimates B/BMSY time series and other biological quantities using only
+Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY) from
 a time series of catch and a resilience estimate using cMSY from Froese et al. (2017).
 }
 \examples{
 output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)
-plot_cmsy2(output)
-plot_cmsy2_mgmt(output)
+plot_dlm(output)
 }
 \references{
 Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)

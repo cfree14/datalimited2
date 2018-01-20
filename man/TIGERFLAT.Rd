@@ -6,9 +6,9 @@
 \title{SE Australia Tiger flathead time series}
 \format{A data frame with 98 rows (years) and 3 variables:
 \describe{
-  \item{Stock}{stock id}
+  \item{stock}{stock id}
   \item{yr}{year}
-  \item{ct}{catch, in metric tons}
+  \item{catch}{catch, in metric tons}
 }}
 \source{
 Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC

@@ -6,22 +6,6 @@
 \usage{
 plot_ocom(output)
 }
-\arguments{
-\item{output}{Output from the OCOM model (see ?ocom)}
-}
-\value{
-Plots
-}
 \description{
 Plot OCOM results
-}
-\examples{
-output <- ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc, m=0.2)
-plot_ocom(output)
-}
-\references{
-Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
-(2017) An optimised catch-only assessment method for data poor fisheries.
-ICES Journal of Marine Science: doi:10.1093/icesjms/fsx226.
-\url{https://doi.org/10.1093/icesjms/fsx226}
 }

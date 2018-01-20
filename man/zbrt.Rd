@@ -19,12 +19,12 @@ B/BMSY is this estimate doubled (B/BMSY = S * 2). High and low values correspond
 upper and lower 95% confidence intervals, respectively.
 }
 \description{
-Estimates saturation (B/K) and stock status (B/BMSY) time series from a
+Estimates saturation (B/k) and stock status (B/BMSY) time series from a
 time series of catch using the boosted regression tree (BRT) model from Zhou et al. (2017).
 }
 \examples{
 output <- zbrt(year=TIGERFLAT$yr, catch=TIGERFLAT$catch)
-plot_zbrt(output)
+plot_dlm(output)
 }
 \references{
 Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
