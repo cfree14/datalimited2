@@ -90,7 +90,7 @@ fit_zbrt <- function(year, catch){
 
 #' Zhou-BRT catch-only stock assessment model
 #'
-#' Estimates saturation (B/K) and stock status (B/BMSY) time series from a
+#' Estimates saturation (B/k) and stock status (B/BMSY) time series from a
 #' time series of catch using the boosted regression tree (BRT) model from Zhou et al. (2017).
 #'
 #' @param year A time series of years
@@ -105,7 +105,7 @@ fit_zbrt <- function(year, catch){
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}
 #' @examples
 #' output <- zbrt(year=TIGERFLAT$yr, catch=TIGERFLAT$catch)
-#' plot_zbrt(output)
+#' plot_dlm(output)
 #' @export
 zbrt <- function(year, catch){
   # Create dataframe with S estimates
@@ -127,7 +127,9 @@ zbrt <- function(year, catch){
   d$bbmsy <- s2bbmsy(d$s)
   d$bbmsy_lo <- s2bbmsy(d$s_lo)
   d$bbmsy_hi <- s2bbmsy(d$s_hi)
-  return(d)
+  ts <- d
+  output <- list(ts=ts, method="zBRT")
+  return(output)
 }
 
 
