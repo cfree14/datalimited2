@@ -164,7 +164,7 @@ ma <- function(x){
 ################################################################################
 
 # Set R prior
-r_prior <- function(r.low, r.hi){
+r_prior <- function(r.low, r.hi, res){
   # initial range of r from input file
   if(is.na(r.low)==F & is.na(r.hi)==F) {
     start.r <- c(r.low,r.hi)
@@ -263,7 +263,7 @@ k_prior <- function(endbio, start.r, ct){
 
 #' cMSY catch-only stock assessment model
 #'
-#' Estimates B/BMSY time series and other biological quantities using only
+#' Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY) from
 #' a time series of catch and a resilience estimate using cMSY from Froese et al. (2017).
 #'
 #' @param year A time series of years
@@ -276,20 +276,19 @@ k_prior <- function(endbio, start.r, ct){
 #' @param endb.low,endb.hi A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)
 #' @param q.start,q.end A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)
 #' @param verbose Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)
-#' @return A list of length six with the following elements:
-#' (1) A dataframe with biological quantity / reference point estimates with 95% confidence intervals;
-#' (2) A dataframe with B/BMSY and reference point time series with 95% confidence intervals;
-#' (3) A dataframe with the priors used in the cMSY analysis;
-#' (4) A vector with the viable r values;
-#' (5) A vector with the viable k values;
-#' (6) A vector with the viable saturation values.
+#' @return A list containing the following elements:
+#' (1) ref_pts - A dataframe with biological quantity / reference point estimates with 95% confidence intervals;
+#' (2) ref_ts - A dataframe with B/BMSY and reference point time series with 95% confidence intervals;
+#' (3) priors - A dataframe with the priors used in the cMSY analysis;
+#' (4) rv.all - A vector with the viable r values;
+#' (5) kv.all - A vector with the viable k values;
+#' (6) btv.all - A dataframe with the biomass trajectories produced by the viable r/k pairs.
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
 #' Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 #' @examples
 #' output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)
-#' plot_cmsy2(output)
-#' plot_cmsy2_mgmt(output)
+#' plot_dlm(output)
 #' @export
 cmsy2 <- function(year, catch, resilience=NA,
                   r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
@@ -343,7 +342,7 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # Set priors
   res <- resilience # rename resilience
-  start.r <- r_prior(r.low, r.hi)
+  start.r <- r_prior(r.low, r.hi, res)
   startbio <- startbio_prior(stb.low, stb.hi, start.yr)
   int_params <- intbio_prior(intb.low, intb.hi, int.yr, start.yr, end.yr, startbio, yr, ct)
   intbio <- int_params[[1]]
@@ -633,7 +632,7 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # Return
   out <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
-              rv.all=rv.all, kv.all=kv.all, btv.all=btv.all)
+              rv.all=rv.all, kv.all=kv.all, btv.all=btv.all, method="cMSY")
   return(out)
 
 }

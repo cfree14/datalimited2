@@ -51,8 +51,8 @@
 
 #' Bayesian state-space surplus production model
 #'
-#' Estimates B/BMSY time series and other biological quantities using only
-#' a time series of catch and a resilience estimate using the Bayesian surplus
+#' Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY)
+#' from a time series of catch and a resilience estimate using the Bayesian surplus
 #' produciton model from Froese et al. (2017).
 #'
 #' @param year A time series of years
@@ -73,8 +73,7 @@
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 #' @examples
 #' output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
-#' plot_cmsy2(output)
-#' plot_cmsy2_mgmt(output)
+#' plot_dlm(output)
 #' @export
 bsm <- function(year, catch, biomass, btype, resilience=NA,
                 r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
@@ -523,7 +522,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Assemble output
   output <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
-                 r_out=r_out, k_out=k_out)
+                 r_out=r_out, k_out=k_out, method="BSM")
   return(output)
 
 }

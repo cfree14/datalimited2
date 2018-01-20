@@ -35,14 +35,14 @@ BDM = function(K, r, S, b, C) {
 #' Optimized catch-only model
 #'
 #' Estimates saturation (B/K) and stock status (B/BMSY) time series and
-#' other biological quantities (e.g., r, k, MSY, final year saturation) from a time
-#' series of catch and a natural mortality (M) estimate using the optimized
+#' other biological quantities (i.e., r, k, MSY, final year saturation) from a time
+#' series of catch and natural mortality (M) estimate using the optimized
 #' catch-only model (OCOM) from Zhou et al. (2017).
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
 #' @param m Natural mortality (1/yr)
-#' @return A list with the following elements: (1) time series of B/BMSY estimates;
+#' @return A list containing the following elements: (1) time series of B/BMSY estimates;
 #' (2) 1000 randomly selected biomass trajectories; (3) 1000 corresponding B/BMSY
 #' trajectories; (4) estimates of biological quanties r, k, MSY, S; and (5) the
 #' 10,000 draws underpinning these values.
@@ -52,7 +52,7 @@ BDM = function(K, r, S, b, C) {
 #' \url{https://doi.org/10.1093/icesjms/fsx226}
 #' @examples
 #' output <- ocom(year=TIGERFLAT$yr, catch=TIGERFLAT$catch, m=0.27)
-#' plot_ocom(output)
+#' plot_dlm(output)
 #' @export
 ocom <- function(year, catch, m){
 
@@ -182,7 +182,7 @@ ocom <- function(year, catch, m){
   output <- list(bbmsy_ts=bbmsy_ts, b_ts=b_ts,
                  s_trajs=s_trajs, s_ts=s_ts,
                  bbmsy_trajs=bbmsy_trajs, b_trajs=b_trajs,
-                 krms=krms, krms_draws=krms_draws)
+                 krms=krms, krms_draws=krms_draws, method="OCOM")
   return(output)
 
 }
