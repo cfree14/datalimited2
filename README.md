@@ -11,6 +11,7 @@ The "datalimited2" R package can then be installed from GitHub with:
 ``` r
 install.packages("devtools")
 devtools::install_github("cfree14/datalimited2")
+library(datalimited2)
 ```
 
 The package implements the following catch-only stock assessment models:
