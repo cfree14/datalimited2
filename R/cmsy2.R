@@ -263,8 +263,8 @@ k_prior <- function(endbio, start.r, ct){
 
 #' cMSY catch-only stock assessment model
 #'
-#' Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY) from
-#' a time series of catch and a resilience estimate using cMSY from Froese et al. (2017).
+#' Estimates B/BMSY time series and other biological quantities (e.g., r, K, MSY) from
+#' a time series of catch and a resilience estimate using cMSY from Froese et al. 2017.
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
@@ -275,25 +275,32 @@ k_prior <- function(endbio, start.r, ct){
 #' @param intb.low,intb.hi A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)
 #' @param endb.low,endb.hi A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)
 #' @param q.start,q.end A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)
-#' @param verbose Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)
+#' @param verbose Set to FALSE to suppress printed updates on cMSY/BSM progress (default=TRUE)
 #' @return A list containing the following elements:
-#' (1) ref_pts - A dataframe with biological quantity / reference point estimates with 95% confidence intervals;
-#' (2) ref_ts - A dataframe with B/BMSY and reference point time series with 95% confidence intervals;
+#' (1) ref_pts - A dataframe with biological quantity / reference point estimates with 95\% confidence intervals;
+#' (2) ref_ts - A dataframe with B/BMSY and reference point time series with 95\% confidence intervals;
 #' (3) priors - A dataframe with the priors used in the cMSY analysis;
 #' (4) rv.all - A vector with the viable r values;
 #' (5) kv.all - A vector with the viable k values;
-#' (6) btv.all - A dataframe with the biomass trajectories produced by the viable r/k pairs.
+#' (6) btv.all - A dataframe with the biomass trajectories produced by the viable r/K pairs.
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
 #' Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 #' @examples
+#' # Fit cMSY to catch time series and plot output
 #' output <- cmsy2(year=SOLIRIS$yr, catch=SOLIRIS$ct, r.low=0.18, r.hi=1.02)
 #' plot_dlm(output)
+#'
+#' # Extract reference points and time series from output
+#' ref_pts <- output[["ref_pts"]]
+#' ref_ts <- output[["ref_ts"]]
 #' @export
 cmsy2 <- function(year, catch, resilience=NA,
                   r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
                   intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, q.start=NA, q.end=NA, verbose=T){
 
+  # Perform a few error checks
+  if(sum(is.na(catch))>0){stop("Error: NA in catch time series. Fill or interpolate.")}
 
   # Set model parameters
   #############################################################
@@ -326,9 +333,6 @@ cmsy2 <- function(year, catch, resilience=NA,
   # 1. Convert to 1000s tons (or other units)
   # 2. Calculate 3-yr moving average (average of past 3 years)
   ct.raw <- catchData$ct / 1000
-  if(is.na(mean(ct.raw))){
-    cat("ERROR: Missing value in Catch data; fill or interpolate\n")
-  }
   ct <- ma(ct.raw)
 
   # Identify number of years and start/end years

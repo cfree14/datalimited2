@@ -90,27 +90,45 @@ fit_zbrt <- function(year, catch){
 
 #' Zhou-BRT catch-only stock assessment model
 #'
-#' Estimates saturation (B/k) and stock status (B/BMSY) time series from a
-#' time series of catch using the boosted regression tree (BRT) model from Zhou et al. (2017).
+#' Estimates saturation (B/K) and stock status (B/BMSY) time series from a
+#' time series of catch using the boosted regression tree (BRT) model from Zhou et al. 2017.
+#' B/BMSY is equal to saturation times two.
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
-#' @return A dataframe with a time series of saturation and B/BMSY estimates. S8 and S38
-#' correspond to the saturation estimates from the 8- and 38-predictor models, respectively.
+#' @return A list of length two where the second element is the name of the method
+#' and the first element is a dataframe with a time series of saturation and B/BMSY estimates.
+#' S8 and S38 correspond to the saturation estimates from the 8- and 38-predictor models, respectively.
 #' S, the best estimate of saturation, is the mean of these two predictions.
 #' B/BMSY is this estimate doubled (B/BMSY = S * 2). High and low values correspond to the
-#' upper and lower 95% confidence intervals, respectively.
+#' upper and lower 95\% confidence intervals, respectively.
+#' @details Zhou et al. (2017) use boosted regression tree models (Zhou-BRT)
+#' trained on the RAMLDB to estimate saturation (i.e., 1 - depletion ≈ 0.5B/BMSY)
+#' from 56 catch history statistics, the most important of which are linear
+#' regression coefficients for the whole catch time series, the subseries before
+#' and after the maximum catch, and in recent years. Ultimately, saturation is
+#' estimated as the average of the saturation values predicted by two reduced
+#' and bias-corrected BRT models (8 and 38 predictors each).
 #' @references Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
 #' (2017) Estimating stock depletion level from patterns of catch history. \emph{Fish and Fisheries}.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}
 #' @examples
+#' # Fit zBRT model to catch time series and plot output
 #' output <- zbrt(year=TIGERFLAT$yr, catch=TIGERFLAT$catch)
 #' plot_dlm(output)
+#'
+#' # Extract time series from output
+#' ts <- output[["ts"]]
 #' @export
 zbrt <- function(year, catch){
+
+  # Perform a few error checks
+  if(sum(is.na(catch))>0){stop("Error: NA in catch time series. Fill or interpolate.")}
+
   # Create dataframe with S estimates
   d <- data.frame(year=year, catch=catch, s8=NA, s38=NA,
                   s=NA, s_lo=NA, s_hi=NA, bbmsy=NA, bbmsy_lo=NA, bbmsy_hi=NA)
+
   # Loop through years and estimate S
   # zBRT requires 7 years of data
   for(i in nrow(d):8){
@@ -123,6 +141,7 @@ zbrt <- function(year, catch){
     d$s_lo[i] <- stats::quantile(s_draws, probs=0.025)
     d$s_hi[i] <- stats::quantile(s_draws, probs=0.975)
   }
+
   # Calculate B/BMSY from S
   d$bbmsy <- s2bbmsy(d$s)
   d$bbmsy_lo <- s2bbmsy(d$s_lo)

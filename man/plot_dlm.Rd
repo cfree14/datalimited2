@@ -7,26 +7,32 @@
 plot_dlm(output)
 }
 \arguments{
-\item{output}{Output from a datalimited2 model}
+\item{output}{Output from a \pkg{datalimited2} model}
 }
 \description{
 Plots the results of data-limited stock assessment models implemented in the
-datalimited2 package.
+\pkg{datalimited2} package.
 }
 \details{
 Produces different plots for each model:
 
-1. zBRT - Plots show: (A) catch time series; (B) saturation time series; and
+1. \strong{zBRT} - Plots show: (A) catch time series; (B) saturation time series; and
 (C) B/BMSY time series.
 
-2. OCOM - Plots show: (A) catch time series; (B) viable r/k pairs;
+2. \strong{OCOM} - Plots show: (A) catch time series; (B) viable r/K pairs;
 (C) saturation time series; and (D) B/BMSY time series.
 
-3. cMSY - Plots show: (A) catch time series; (B) viable r/k pairs;
+3. \strong{cMSY} - Plots show: (A) catch time series; (B) viable r/K pairs;
 (C) B/BMSY time series; (D) F/FMSY time series; and (E) Kobe plot.
 
-4. BSM - Plots show: (A) catch time series; (B) viable r/k pairs;
+4. \strong{BSM} - Plots show: (A) catch time series; (B) viable r/k pairs;
 (C) B/BMSY time series; (D) F/FMSY time series; and (E) Kobe plot.
+
+In all plots, dashed lines show the reference point target (i.e., B/BMSY = 1,
+F/FMSY = 1, or saturation = 0.5) and dotted lines show the overfishing limit
+(i.e., B/BMSY = 0.5 or saturation = 0.25). If MSY is estimated, the median value
+and 95\% confidence intervals are shown on the catch time series as a line and
+grey shading, respectively.
 }
 \examples{
 output <- ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc, m=0.2)

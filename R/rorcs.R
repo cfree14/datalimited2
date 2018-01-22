@@ -23,8 +23,10 @@
 
 #' Refined ORCS approach
 #'
-#' Estimates stock status (i.e., under, fully, or overexploited) from expert
-#' knowledge using the refined ORCS approach from Free et al. 2017.
+#' Estimates stock status (i.e., under, fully, or overexploited) from 12 stock- and
+#' fishery-related predictors using the refined ORCS approach from Free et al. 2017.
+#' Stock status categories are defined as follows: (1) B/BMSY>1.5 = underexploited;
+#' (2) 0.5<B/BMSY<1.5 = fully exploited; and (3) B/BMSY<0.5 = overexploited.
 #'
 #' @param scores A numeric vector of length twelve containing scores for the
 #' following "Table of Attributes" questions:
@@ -42,12 +44,22 @@
 #'   \item{TOA 13 - Recent trend in abundance index}
 #'   \item{TOA 14 - Proportion of population protected}
 #' }
-#' @return Stock status (i.e., under, fully, or overexploited)
+#' @return A dataframe containing the probability that a stock is under, fully,
+#' or overexploited where the status estimate is the most probable category.
+#' @details The refined ORCS approach (rORCS) uses a boosted classification tree
+#' model trained on the RAMLDB to estimate stock status (i.e., under, fully,
+#' or overexploited) from twelve stock- and fishery-related predictors, the
+#' most important of which are the value of the taxa, status of the assessed
+#' stocks in the fishery, targeting intensity, discard rate, and occurrence in
+#' the catch (Free et al. 2017). The approach also includes a step for estimating
+#' the overfishing limit (OFL) as the product of a historical catch statistic and
+#' scalar based on stock status and risk policy.
 #' @references Free CM, Jensen OP, Wiedenmann J, Deroba JJ (2017) The
 #' refined ORCS approach: a catch-based method for estimating stock status
 #' and catch limits for data-poor fish stocks. \emph{Fisheries Research} 193: 60-70.
 #' \url{https://doi.org/10.1016/j.fishres.2017.03.017}
 #' @examples
+#' # Create vector of TOA scores and estimate status
 #' scores <- c(1, 2, NA, 2, 2, 3, 1.93, 2, 1, 2, 1, 3)
 #' rorcs(scores)
 #' @export

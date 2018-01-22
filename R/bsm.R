@@ -79,6 +79,9 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                 r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
                 intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, q.start=NA, q.end=NA, verbose=T){
 
+  # Perform a few error checks
+  if(sum(is.na(catch))>0){stop("Error: NA in catch time series. Fill or interpolate.")}
+
   # Set model parameters
   ##############################################################################
 
@@ -110,9 +113,6 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   # 1. Convert to 1000s tons (or other units)
   # 2. Calculate 3-yr moving average (average of past 3 years)
   ct.raw <- catchData$ct / 1000
-  if(is.na(mean(ct.raw))){
-    cat("ERROR: Missing value in Catch data; fill or interpolate\n")
-  }
   ct <- ma(ct.raw)
 
   # Transform biomass data

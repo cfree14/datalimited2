@@ -14,20 +14,41 @@ ocom(year, catch, m)
 \item{m}{Natural mortality (1/yr)}
 }
 \value{
-A list containing the following elements: (1) time series of B/BMSY estimates;
-(2) 1000 randomly selected biomass trajectories; (3) 1000 corresponding B/BMSY
-trajectories; (4) estimates of biological quanties r, k, MSY, S; and (5) the
-10,000 draws underpinning these values.
+A list of length nine containing the following elements:
+(1) a time series of biomass estimates;
+(2) a time series of saturation estimates;
+(3) a time series of B/BMSY estimates;
+(4) 1000 randomly selected biomass trajectories;
+(5) 1000 corresponding saturation trajectories;
+(6) 1000 corresponding B/BMSY trajectories;
+(7) the estimates of biological quanties r, k, MSY, and S;
+(8) 10,000 draws underpinning these values; and
+(9) the name of the method.
 }
 \description{
 Estimates saturation (B/K) and stock status (B/BMSY) time series and
 other biological quantities (i.e., r, k, MSY, final year saturation) from a time
 series of catch and natural mortality (M) estimate using the optimized
-catch-only model (OCOM) from Zhou et al. (2017).
+catch-only model (OCOM) from Zhou et al. 2017.
+}
+\details{
+The "optimized catch-only model" (OCOM) developed by Zhou et al. 2017
+employs a stock reduction analysis (SRA) using priors for r and stock depletion
+derived from natural mortality and saturation estimated by the Zhou-BRT method, respectively.
+The SRA uses a Schaefer biomass dynamics model and an algorithm for identifying
+feasible parameter combinations to estimate biological quantities such as B0, r,
+annual biomass, and depletion as well as management quantities such as MSY, BMSY, and FMSY.
 }
 \examples{
+# Fit OCOM to catch time series and plot output
+set.seed(1) # stochastic fitting
 output <- ocom(year=TIGERFLAT$yr, catch=TIGERFLAT$catch, m=0.27)
 plot_dlm(output)
+
+# Extract reference points and time series from output
+b_ts <- output[["b_ts"]]
+bbmsy_ts <- output[["bbmsy_ts"]]
+krms <- output[["krms"]]
 }
 \references{
 Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
