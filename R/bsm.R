@@ -361,7 +361,9 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   ##########################################################
 
   # Write JAGS model to temporary file
-  cat(Model, file="./r2jags.bug")
+  wd <- getwd()
+  jags_model <- paste(wd, "r2jags.bug", sep="/")
+  cat(Model, file=jags_model)
 
   # Initialize JAGS model?
   if(btype=="biomass") {
@@ -378,7 +380,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   jags_outputs <- R2jags::jags.parallel(data=jags.data,
                                 working.directory=NULL, inits=j.inits,
                                 parameters.to.save=jags.save.params,
-                                model.file="./r2jags.bug", n.chains = n.chains,
+                                model.file=jags_model, n.chains = n.chains,
                                 n.burnin = 30000, n.thin = 10,
                                 n.iter = 60000)
 
@@ -490,9 +492,9 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Refence points dataframe
   ref_pts <- data.frame(rbind(c(est=r.jags, lo=lcl.r.jags, hi=ucl.r.jags),
-                              c(k.jags, lcl.k.jags, ucl.k.jags),
-                              c(MSY.jags, lcl.MSY.jags, ucl.MSY.jags),
-                              c(Bmsy, lcl.Bmsy, ucl.Bmsy),
+                              c(k.jags*1000, lcl.k.jags*1000, ucl.k.jags*1000),
+                              c(MSY.jags*1000, lcl.MSY.jags*1000, ucl.MSY.jags*1000),
+                              c(Bmsy*1000, lcl.Bmsy*1000, ucl.Bmsy*1000),
                               c(Fmsy, lcl.Fmsy, ucl.Fmsy)))
   ref_pts$param <- c("r", "k", "msy", "bmsy", "fmsy")
   ref_pts <- subset(ref_pts, select=c(param, est, lo, hi))
@@ -507,8 +509,8 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   # if(btype=="CPUE"){s_hi <- bt/(mean.q*lcl.k.jags)}else{s_hi <- bt/lcl.k.jags}
 
   # Reference points time series
-  ref_ts <- data.frame(year=yr, catch=ct.raw, catch_ma=ct,
-                       b=B, b_lo=lcl.B, b_hi=ucl.B,
+  ref_ts <- data.frame(year=yr, catch=ct.raw*1000, catch_ma=ct*1000,
+                       b=B*1000, b_lo=lcl.B*1000, b_hi=ucl.B*1000,
                        bbmsy=B.Bmsy, bbmsy_lo=lcl.B.Bmsy, bbmsy_hi=ucl.B.Bmsy,
                        s=B.Bmsy/2, s_lo=lcl.B.Bmsy/2, s_hi=ucl.B.Bmsy/2,
                        f=Fm, f_lo=lcl.F, f_hi=ucl.F,
