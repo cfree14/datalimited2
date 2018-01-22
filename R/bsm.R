@@ -84,10 +84,10 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Setup parallel processing
   # Use 3 chains in JAGS if more than 2 cores are available
-  n.cores <- pmin(2, parallel::detectCores())
-  n.chains <- ifelse(n.cores > 2,3,2)
-  cl <- parallel::makeCluster(n.cores)
-  doParallel::registerDoParallel(cl, cores = n.cores)
+  # n.cores <- pmin(2, parallel::detectCores())
+  # n.chains <- ifelse(n.cores > 2,3,2)
+  # cl <- parallel::makeCluster(n.cores)
+  # doParallel::registerDoParallel(cl, cores = n.cores)
 
   # Set model parameters
   FullSchaefer <- F # will automatically change to TRUE if enough abundance data available
@@ -377,10 +377,10 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                                                                 "itau2"=1000,
                                                                 "isigma2"=1000)}}
   # Run JAGS model
-  jags_outputs <- R2jags::jags.parallel(data=jags.data,
-                                working.directory=NULL, inits=j.inits,
+  jags_outputs <- R2jags::jags(data=jags.data,
+                                working.directory=wd, inits=j.inits,
                                 parameters.to.save=jags.save.params,
-                                model.file=jags_model, n.chains = n.chains,
+                                model.file="r2jags.bug", #n.chains = n.chains,
                                 n.burnin = 30000, n.thin = 10,
                                 n.iter = 60000)
 
@@ -519,8 +519,8 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                        er=Fm/Fmsy)
 
   #stop parallel processing clusters
-  parallel::stopCluster(cl)
-  doParallel::stopImplicitCluster()
+  # parallel::stopCluster(cl)
+  # doParallel::stopImplicitCluster()
 
   # Assemble output
   output <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
