@@ -22,10 +22,7 @@ Produces different plots for each model:
 2. \strong{OCOM} - Plots show: (A) catch time series; (B) viable r/K pairs;
 (C) saturation time series; and (D) B/BMSY time series.
 
-3. \strong{cMSY} - Plots show: (A) catch time series; (B) viable r/K pairs;
-(C) B/BMSY time series; (D) F/FMSY time series; and (E) Kobe plot.
-
-4. \strong{BSM} - Plots show: (A) catch time series; (B) viable r/k pairs;
+3. \strong{cMSY / BSM} - Plots show: (A) catch time series; (B) viable r/K pairs;
 (C) B/BMSY time series; (D) F/FMSY time series; and (E) Kobe plot.
 
 In all plots, dashed lines show the reference point target (i.e., B/BMSY = 1,
@@ -35,6 +32,7 @@ and 95\% confidence intervals are shown on the catch time series as a line and
 grey shading, respectively.
 }
 \examples{
+# Fit OCOM to catch time series and plot output
 output <- ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc, m=0.2)
 plot_dlm(output)
 }

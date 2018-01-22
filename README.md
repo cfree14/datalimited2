@@ -9,7 +9,10 @@ Before installing datalimited2, you will need to install [JAGS](http://mcmc-jags
 The "datalimited2" R package can then be installed from GitHub with:
 
 ``` r
+# Run if you don't already have devtools installed
 install.packages("devtools")
+
+# Run once devtools is successfully installed
 devtools::install_github("cfree14/datalimited2")
 library(datalimited2)
 ```
@@ -22,6 +25,8 @@ The package implements the following catch-only stock assessment models:
 - Optimized catch-only model (OCOM) from Zhou et al. 2017b; see `?ocom`
 - Refined ORCS approach (rORCS) from Free et al. 2017; see `?rorcs`
 - Superensemble approaches from Jensen & Free 2018; see `?super1`, `?super4`, `?super12`
+
+The results of all but the rORCS model can be visualized using the `?plot_dlm` function.
 
 Citation
 --------
