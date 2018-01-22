@@ -608,17 +608,17 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # Create output object
   ref_pts <- data.frame(rbind(c(r.est, lcl.r.est, ucl.r.est),
-                              c(k.est, lcl.k.est, ucl.k.est),
-                              c(MSY.est, lcl.MSY.est, ucl.MSY.est),
+                              c(k.est*1000, lcl.k.est*1000, ucl.k.est*1000),
+                              c(MSY.est*1000, lcl.MSY.est*1000, ucl.MSY.est*1000),
                               c(Fmsy, lcl.Fmsy, ucl.Fmsy),
-                              c(Bmsy, lcl.Bmsy, ucl.Bmsy)))
+                              c(Bmsy*1000, lcl.Bmsy*1000, ucl.Bmsy*1000)))
   colnames(ref_pts) <- c("est", "lo", "hi")
   ref_pts$param <- c("r", "k", "msy", "fmsy", "bmsy")
   ref_pts <- subset(ref_pts, select=c(param, est, lo, hi))
 
   # Build reference point time series
-  ref_ts <- data.frame(year=year, catch=ct.raw, catch_ma=ct,
-                       b=B, b_lo=lcl.B, b_hi=ucl.B,
+  ref_ts <- data.frame(year=year, catch=ct.raw*1000, catch_ma=ct*1000,
+                       b=B*1000, b_lo=lcl.B*1000, b_hi=ucl.B*1000,
                        bbmsy=B.Bmsy, bbmsy_lo=lcl.B.Bmsy, bbmsy_hi=ucl.B.Bmsy,
                        s=B.Bmsy/2, s_lo=lcl.B.Bmsy/2, s_hi=ucl.B.Bmsy/2,
                        f=Fm, f_lo=lcl.F, f_hi=ucl.F,
