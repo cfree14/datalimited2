@@ -300,7 +300,7 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # Setup parallel processing
   # Use 3 chains in JAGS if more than 2 cores are available
-  n.cores <- parallel::detectCores()
+  n.cores <- pmin(2, parallel::detectCores())
   n.chains <- ifelse(n.cores > 2,3,2)
   cl <- parallel::makeCluster(n.cores)
   doParallel::registerDoParallel(cl, cores = n.cores)
