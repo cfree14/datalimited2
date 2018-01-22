@@ -1,5 +1,5 @@
 
-#' Plot zBRT results
+# Plot zBRT results
 plot_zbrt <- function(output){
 
   # Subset data
@@ -36,6 +36,7 @@ plot_zbrt <- function(output){
   # lines(x=output$year, y=output$s_lo, lwd=1.1, lty=2)
   # lines(x=output$year, y=output$s_hi, lwd=1.1, lty=2)
   # Add overfished line (B/BMSY=0.25)
+  lines(x=c(xmin, xmax), y=c(0.5, 0.5), lty=2)
   lines(x=c(xmin, xmax), y=c(0.25, 0.25), lty=3)
   # Label end year saturation
   text(x=yr_final, y=s_final, label=round(s_final,2), pos=4)
@@ -59,6 +60,7 @@ plot_zbrt <- function(output){
   # lines(x=output$year, y=output$bbmsy_lo, lwd=1.1, lty=2)
   # lines(x=output$year, y=output$bbmsy_hi, lwd=1.1, lty=2)
   # Add overfished line (B/BMSY=0.5)
+  lines(x=c(xmin, xmax), y=c(1,1), lty=2)
   lines(x=c(xmin, xmax), y=c(0.5, 0.5), lty=3)
   # Label end year B/BMSY
   text(x=yr_final, y=bbmsy_final, label=round(bbmsy_final,2), pos=4)

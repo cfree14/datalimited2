@@ -1,5 +1,5 @@
 
-#' Plot OCOM results
+# Plot OCOM results
 plot_ocom <- function(output){
 
   # Unpack output
@@ -29,9 +29,9 @@ plot_ocom <- function(output){
   # Add MSY shading
   rect(xleft=xmin, xright=xmax,
        ybottom=krms$q0.025[krms$param=="msy"],
-       ytop=krms$q0.975[krms$param=="msy"], col="grey70", border=F)
+       ytop=krms$q0.975[krms$param=="msy"], col="grey80", border=F)
   # Add catch
-  lines(bbmsy_ts$year, bbmsy_ts$catch, lwd=1.2)
+  lines(bbmsy_ts$year, bbmsy_ts$catch, lwd=1.1)
   # Add MSY line and stats
   lines(x=c(xmin, xmax), y=rep(krms$q0.5[krms$param=="msy"], 2), lty=2)
   text(x=xmax-5, y=krms$q0.5[krms$param=="msy"], pos=c(3), labels="MSY", font=2)
@@ -40,7 +40,7 @@ plot_ocom <- function(output){
   ##############################################################################
 
   # Plot viable r-k pairs
-  plot(krms_draws$k, krms_draws$r, log="xy", bty="l", col="grey70", las=1,
+  plot(krms_draws$k, krms_draws$r, log="xy", bty="l", col="grey80", las=1,
        xlab="K", ylab='r', main="B. Viable r-k pairs")
 
   # Add best r-k pair
@@ -63,7 +63,7 @@ plot_ocom <- function(output){
   # for(i in 1:length(params)){
   #   vals <- krms_draws[,params[i]]
   #   median(vals)
-  #   hist(vals, las=1, xlab=param_names[i], main=paste0("OCOM: ", param_names[i], " posterior"), col="grey70", border=F)
+  #   hist(vals, las=1, xlab=param_names[i], main=paste0("OCOM: ", param_names[i], " posterior"), col="grey80", border=F)
   #   abline(v=median(vals), lwd=1.5, lty=2)
   # }
 
@@ -82,11 +82,13 @@ plot_ocom <- function(output){
        xlim=c(xmin, xmax), ylim=c(0, ymax), xlab="", ylab="Biomass (in 1000s)",
        main="C. Biomass")
   # Add randomly selected trajectories
-  for(i in 1:ncol(b_trajs1)){lines(x=b_ts$year, y=b_trajs1[,i], col="grey70")}
+  # for(i in 1:ncol(b_trajs1)){lines(x=b_ts$year, y=b_trajs1[,i], col="grey80")}
+  polygon(x=c(b_ts$year, rev(b_ts$year)),
+          y=c(b_ts$q0.025/1000, rev(b_ts$q0.975/1000)), col="grey80", border=F)
   # Add median and 95% CI trajectories
   lines(x=b_ts$year, y=b_ts$q0.5/1000, lwd=1.1)
-  lines(x=b_ts$year, y=b_ts$q0.025/1000, lwd=1.1, lty=2)
-  lines(x=b_ts$year, y=b_ts$q0.975/1000, lwd=1.1, lty=2)
+  # lines(x=b_ts$year, y=b_ts$q0.025/1000, lwd=1.1, lty=2)
+  # lines(x=b_ts$year, y=b_ts$q0.975/1000, lwd=1.1, lty=2)
 
   # D. Saturation time series
   ##############################################################################
@@ -98,12 +100,15 @@ plot_ocom <- function(output){
        xlim=c(xmin, xmax), ylim=c(0,1), xlab="", ylab="Saturation",
        main="D. Saturation (B/K)")
   # Add randomly selected trajectories
-  for(i in 1:ncol(s_trajs)){lines(x=s_ts$year, y=s_trajs[,i], col="grey70")}
+  # for(i in 1:ncol(s_trajs)){lines(x=s_ts$year, y=s_trajs[,i], col="grey80")}
+  polygon(x=c(s_ts$year, rev(s_ts$year)),
+          y=c(s_ts$q0.025, rev(s_ts$q0.975)), col="grey80", border=F)
   # Add median and 95% CI trajectories
   lines(x=s_ts$year, y=s_ts$q0.5, lwd=1.1)
-  lines(x=s_ts$year, y=s_ts$q0.025, lwd=1.1, lty=2)
-  lines(x=s_ts$year, y=s_ts$q0.975, lwd=1.1, lty=2)
+  # lines(x=s_ts$year, y=s_ts$q0.025, lwd=1.1, lty=2)
+  # lines(x=s_ts$year, y=s_ts$q0.975, lwd=1.1, lty=2)
   # Add overfished line (saturation=0.25)
+  lines(x=c(xmin, xmax), y=c(0.5, 0.5), lty=2)
   lines(x=c(xmin, xmax), y=c(0.25, 0.25), lty=3)
   # Label end year saturation
   text(x=yr_final, y=s_final, label=round(s_final,2), pos=4)
@@ -118,21 +123,17 @@ plot_ocom <- function(output){
        xlim=c(xmin, xmax), ylim=c(0,2), xlab="", ylab=expression("B / B"["MSY"]),
        main=expression(bold("E. B/B"["MSY"])))
   # Add randomly selected trajectories
-  for(i in 1:ncol(bbmsy_trajs)){lines(x=bbmsy_ts$year, y=bbmsy_trajs[,i], col="grey70")}
+  # for(i in 1:ncol(bbmsy_trajs)){lines(x=bbmsy_ts$year, y=bbmsy_trajs[,i], col="grey80")}
+  polygon(x=c(bbmsy_ts$year, rev(bbmsy_ts$year)),
+          y=c(bbmsy_ts$q0.025, rev(bbmsy_ts$q0.975)), col="grey80", border=F)
   # Add median and 95% CI trajectories
   lines(x=bbmsy_ts$year, y=bbmsy_ts$q0.5, lwd=1.1)
-  lines(x=bbmsy_ts$year, y=bbmsy_ts$q0.025, lwd=1.1, lty=2)
-  lines(x=bbmsy_ts$year, y=bbmsy_ts$q0.975, lwd=1.1, lty=2)
+  # lines(x=bbmsy_ts$year, y=bbmsy_ts$q0.025, lwd=1.1, lty=3)
+  # lines(x=bbmsy_ts$year, y=bbmsy_ts$q0.975, lwd=1.1, lty=3)
   # Add overfished line (B/BMSY=0.5)
   lines(x=c(xmin, xmax), y=c(0.5, 0.5), lty=3)
+  lines(x=c(xmin, xmax), y=c(1, 1), lty=2)
   # Label end year B/BMSY
   text(x=yr_final, y=bbmsy_final, label=round(bbmsy_final,2), pos=4)
 
 }
-
-
-
-
-
-
-
