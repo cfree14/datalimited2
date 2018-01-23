@@ -16,9 +16,17 @@ ocom_data <- read.csv("data-raw/ocom_data.csv", as.is=T)
 TIGERFLAT <- ocom_data %>%
   filter(stock=="Tiger Flathead")
 
+# Example RAMLDB stock
+load("data-raw/YELLSNEMATL.Rdata")
+YELLSNEMATL_orig <- YELLSNEMATL
+YELLSNEMATL <- YELLSNEMATL_orig %>%
+  select(stockid, year, tc, ssb, f, b_bmsy, f_fmsy) %>%
+  rename(catch=tc, biomass=ssb, bbmsy=b_bmsy, ffmsy=f_fmsy)
+
 # Build data
 devtools::use_data(SOLIRIS, overwrite=T)
 devtools::use_data(TIGERFLAT, overwrite=T)
+devtools::use_data(YELLSNEMATL, overwrite=T)
 
 # Internal data
 ################################################################################

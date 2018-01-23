@@ -2,20 +2,20 @@
 % Please edit documentation in R/s2bbmsy.R
 \name{s2bbmsy}
 \alias{s2bbmsy}
-\title{Convert B/BMSY to saturation}
+\title{Convert saturation to B/BMSY}
 \usage{
 s2bbmsy(s)
 }
 \arguments{
-\item{s}{Saturation (B/K) value(s)}
+\item{s}{A vector of saturation values}
 }
 \value{
-B/BMSY values(s)
+A vector of B/BMSY values
 }
 \description{
-Converts B/BMSY to saturation (S = B/K).
+Converts saturation  to B/BMSY. Note: S = 1 - depletion = B / K = 0.5 * B/BMSY.
 }
-\details{
-S = 1 - depletion = B / K = B/BMSY / 2
-B/BMSY = S * 2
+\examples{
+# Convert saturation of 0.75 to B/BMSY
+s2bbmsy(0.75)
 }

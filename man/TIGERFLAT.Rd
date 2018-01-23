@@ -6,22 +6,22 @@
 \title{SE Australia Tiger flathead time series}
 \format{A data frame with 98 rows (years) and 3 variables:
 \describe{
-  \item{stock}{stock id}
-  \item{yr}{year}
-  \item{catch}{catch, in metric tons}
+  \item{stock}{Stock id}
+  \item{yr}{Year}
+  \item{catch}{Catch, in metric tons}
 }}
 \source{
 Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
 (2017) An optimised catch-only assessment method for data poor fisheries.
-ICES Journal of Marine Science: doi:10.1093/icesjms/fsx226.
+\emph{ICES Journal of Marine Science}: doi:10.1093/icesjms/fsx226.
 \url{https://doi.org/10.1093/icesjms/fsx226}
 }
 \usage{
 TIGERFLAT
 }
 \description{
-A dataset containing the catch time series for SE Australia Tiger flathead
-(Neoplatycephalus richardsoni) from 1915-2012. This stock was used as an example in the OCOM
-paper and is used to validate this package's implementation of zBRT and OCOM.
+A dataset containing the catch time series for Southeast Australia Tiger flathead
+(\emph{Neoplatycephalus richardsoni}) from 1915-2012. This stock was used as an example in the OCOM
+paper and is used to validate the \pkg{datalimited2} package's implementation of zBRT and OCOM.
 }
 \keyword{datasets}

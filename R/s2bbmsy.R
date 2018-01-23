@@ -1,27 +1,27 @@
-#' Convert B/BMSY to saturation
+#' Convert saturation to B/BMSY
 #'
-#' Converts B/BMSY to saturation (S = B/K).
+#' Converts saturation  to B/BMSY. Note: S = 1 - depletion = B / K = 0.5 * B/BMSY.
 #'
-#' S = 1 - depletion = B / K = B/BMSY / 2
-#' B/BMSY = S * 2
-#'
-#' @param s Saturation (B/K) value(s)
-#' @return B/BMSY values(s)
+#' @param s A vector of saturation values
+#' @return A vector of B/BMSY values
+#' @examples
+#' # Convert saturation of 0.75 to B/BMSY
+#' s2bbmsy(0.75)
 #' @export
 s2bbmsy <- function(s){
   bbmsy <- s * 2
   return(bbmsy)
 }
 
-#' Convert saturation to B/BMSY
+#' Convert B/BMSY to saturation
 #'
-#' Converts saturation (S = B/K) to B/BMSY
+#' Converts B/BMSY to saturation (S). Note: S = 1 - depletion = B / K = 0.5 * B/BMSY.
 #'
-#' S = 1 - depletion = B / K = B/BMSY / 2
-#' B/BMSY = S * 2
-#'
-#' @param bbmsy B/BMSY values(s)
-#' @return Saturation (B/K) value(s)
+#' @param bbmsy A vector of B/BMSY values
+#' @return A vector of saturation values
+#' @examples
+#' # Convert B/BMSY of 0.5 to saturation
+#' bbmsy2s(0.5)
 #' @export
 bbmsy2s <- function(bbmsy){
   s <- bbmsy / 2

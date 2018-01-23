@@ -51,36 +51,62 @@
 
 #' Bayesian state-space surplus production model
 #'
-#' Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY)
+#' Estimates biomass, fishing mortality, and stock status (i.e., B/BMSY, F/FMSY)
+#' time series and biological/management quantities (i.e., r, K, MSY, BMSY, FMSY)
 #' from a time series of catch and a resilience estimate using the Bayesian surplus
-#' produciton model from Froese et al. (2017).
+#' production model from Froese et al. 2017.
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
-#' @param biomass A time series of biomass or CPUE (type is designated in btype)
-#' @param btype Biomass time series type: "None", "biomass", or "CPUE"
-#' @param resilience Resilience of the stock: "High", "Medium", "Low", "Very low"
-#' @param r.low,r.hi A user-specified prior on the species intrinsic growth rate, r (optional)
+#' @param biomass A time series of biomass or CPUE (specifiy type in \code{btype})
+#' @param btype Biomass time series type: "CPUE" or "biomass" (≥ 5 years required)
+#' @param resilience Resilience of the stock: "High", "Medium", "Low", or "Very low" (optional if \code{r.low} and \code{r.hi} are specified)
+#' @param r.low,r.hi A user-specified prior on the species intrinsic growth rate, r (optional if \code{resilience} is specified)
 #' @param stb.low,stb.hi A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)
 #' @param int.yr A user-specified year of intermediate biomass (optional)
-#' @param intb.low,intb.hi A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)
+#' @param intb.low,intb.hi A user-specified prior on biomass relative to unfished biomass in the year of intermediate biomass (optional)
 #' @param endb.low,endb.hi A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)
-#' @param q.start,q.end A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)
-#' @param verbose Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)
-#' @return A time series of B/BSMY estimates and other stuff
+#' @param q.start,q.end A user-specified start and end year for estimating the catchability coefficient (optional)
+#' @param verbose Set to FALSE to suppress printed updates on model progress (default=TRUE)
+#' @return A list with the following elements:
+#' \item{ref_pts}{A data frame with biological quantity and reference point estimates with 95\% confidence intervals}
+#' \item{ref_ts}{A data frame with B/BMSY, F/FMSY, biomass, and fishing mortality time series with 95\% confidence intervals}
+#' \item{priors}{A data frame with the priors used in the analysis}
+#' \item{r_viable}{A vector with the viable r values}
+#' \item{k_viable}{A vector with the viable K values}
+#' \item{method}{Name of the method}
+#' @details The Bayesian state-space surplus production model (BSM) developed by
+#' Froese et al. 2017 is fitted using a catch time series and any available
+#' (i.e., doesn't have to be complete) biomass or catch-per-unit-effort (CPUE) data.
+#' It extends the algorithms used to set bounds for r, K, and start, intermediate,
+#' and final year saturation in CMSY by deriving density distributions from these
+#' originally uniform bounds and by adding a prior for catchability, q. BSM estimates
+#' biomass, fishing mortality, and stock status (i.e., B/BMSY, F/FMSY) time series
+#' and biological/management quantities (i.e., r, K, MSY, BMSY, FMSY).
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
-#' Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
+#' Estimating fisheries reference points from catch and resilience. \emph{Fish and Fisheries} 18(3): 506-526.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 #' @examples
-#' output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
+#' # Fit BSM to catch time series and plot output
+#' output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt,
+#'               btype="CPUE", r.low=0.18, r.hi=1.02)
 #' plot_dlm(output)
+#'
+#' # Extract reference points and time series from output
+#' ref_pts <- output[["ref_pts"]]
+#' ref_ts <- output[["ref_ts"]]
 #' @export
 bsm <- function(year, catch, biomass, btype, resilience=NA,
                 r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
                 intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, q.start=NA, q.end=NA, verbose=T){
 
-  # Perform a few error checks
+  # Perform error checks
+  btypes <- c("CPUE", "biomass")
+  res_vals <- c("High", "Medium", "Low", "Very low")
   if(sum(is.na(catch))>0){stop("Error: NA in catch time series. Fill or interpolate.")}
+  if(is.na(resilience) & (is.na(r.low) | is.na(r.hi))){stop("Error: Either a resilience estimate or a complete user-specified r prior (both r.low and r.hi) must be provided.")}
+  if(!is.na(resilience) & !(resilience%in%res_vals)){stop("Error: Resilience must be 'High', 'Medium', 'Low', or 'Very low' (case-sensitive).")}
+  if(!(btype%in%btypes)){stop("Error: btype must be either 'CPUE' or 'biomass' (case-sensitive).")}
 
   # Set model parameters
   ##############################################################################
@@ -109,6 +135,10 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   # Build catch data (using original cMSY variable naming convention)
   catchData <- data.frame(yr=year, ct=catch, bt=biomass)
 
+  # Make sure enough biomass data
+  n_byrs <- sum(!is.na(catchData$bt))
+  if(n_byrs < nab){stop(paste0("Error: BSM requires ", nab, " or more years of CPUE or biomass data: ", n_byrs, " years were provided"))}
+
   # Transform catch data
   # 1. Convert to 1000s tons (or other units)
   # 2. Calculate 3-yr moving average (average of past 3 years)
@@ -116,11 +146,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   ct <- ma(ct.raw)
 
   # Transform biomass data
-  if(btype=="biomass" | btype=="CPUE"){
-    bt <- catchData$bt / 1000  ## assumes that biomass is in tonnes, transforms to '000 tonnes
-  }else{
-    bt <- NA
-  }
+  bt <- catchData$bt / 1000  ## assumes that biomass is in tonnes, transforms to '000 tonnes
 
   # Identify number of years and start/end years
   yr <- catchData$yr # functions use this quantity
@@ -133,7 +159,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Set priors
   res <- resilience # rename resilience
-  start.r <- r_prior(r.low, r.hi)
+  start.r <- r_prior(r.low, r.hi, res)
   startbio <- startbio_prior(stb.low, stb.hi, start.yr)
   int_params <- intbio_prior(intb.low, intb.hi, int.yr, start.yr, end.yr, startbio, yr, ct)
   intbio <- int_params[[1]]
@@ -189,7 +215,8 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   if(btype == "biomass"){
     # Data to be passed on to JAGS
     jags.data        <- c('ct','bt','nyr', 'start.r','startbio','start.k',
-                          'init.r','init.k', 'pen.bk','pen.F','b.yrs','b.prior')
+                          # 'init.r','init.k', # commented out by CMF b/c not actually data
+                          'pen.bk','pen.F','b.yrs','b.prior')
     # Parameters to be returned by JAGS
     jags.save.params <- c('r','k','P') #
 
@@ -288,7 +315,8 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
     # Data to be passed on to JAGS
     jags.data        <- c('ct','bt','nyr', 'start.r', 'start.k', 'startbio', 'q.prior',
-                          'init.q','init.r','init.k','pen.bk','pen.F','b.yrs','b.prior')
+                         # 'init.q','init.r','init.k',
+                          'pen.bk','pen.F','b.yrs','b.prior')
     # Parameters to be returned by JAGS
     jags.save.params <- c('r','k','q', 'P')
 
@@ -380,7 +408,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
   jags_outputs <- R2jags::jags(data=jags.data,
                                 working.directory=wd, inits=j.inits,
                                 parameters.to.save=jags.save.params,
-                                model.file="r2jags.bug", #n.chains = n.chains,
+                                model.file="r2jags.bug", #n.chains = 2,
                                 n.burnin = 30000, n.thin = 10,
                                 n.iter = 60000)
 
@@ -524,7 +552,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
 
   # Assemble output
   output <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
-                 r_out=r_out, k_out=k_out, method="BSM")
+                 r_viable=r_out, k_viable=k_out, method="BSM")
   return(output)
 
 }

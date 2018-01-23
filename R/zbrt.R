@@ -92,23 +92,24 @@ fit_zbrt <- function(year, catch){
 #'
 #' Estimates saturation (B/K) and stock status (B/BMSY) time series from a
 #' time series of catch using the boosted regression tree (BRT) model from Zhou et al. 2017.
-#' B/BMSY is equal to saturation times two.
+#' Note: B/BMSY is equal to saturation times two.
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
-#' @return A list of length two where the second element is the name of the method
-#' and the first element is a dataframe with a time series of saturation and B/BMSY estimates.
+#' @return A list with the following elements:
+#' \item{ts}{A data frame with a time series of saturation and B/BMSY estimates.
 #' S8 and S38 correspond to the saturation estimates from the 8- and 38-predictor models, respectively.
 #' S, the best estimate of saturation, is the mean of these two predictions.
 #' B/BMSY is this estimate doubled (B/BMSY = S * 2). High and low values correspond to the
-#' upper and lower 95\% confidence intervals, respectively.
-#' @details Zhou et al. (2017) use boosted regression tree models (Zhou-BRT)
-#' trained on the RAMLDB to estimate saturation (i.e., 1 - depletion ≈ 0.5B/BMSY)
+#' upper and lower 95\% confidence intervals, respectively.}
+#' \item{method}{Name of the method}
+#' @details Zhou et al. 2017 use boosted regression tree models (Zhou-BRT)
+#' trained on the RAM Legacy Database to estimate saturation (i.e., 1 - depletion = 0.5*B/BMSY)
 #' from 56 catch history statistics, the most important of which are linear
 #' regression coefficients for the whole catch time series, the subseries before
 #' and after the maximum catch, and in recent years. Ultimately, saturation is
 #' estimated as the average of the saturation values predicted by two reduced
-#' and bias-corrected BRT models (8 and 38 predictors each).
+#' and bias-corrected BRT models (8 and 38 predictors each). B/BMSY is estimated as saturation doubled.
 #' @references Zhou S, Punt AE, Yimin Y, Ellis N, Dichmont CM, Haddon M, Smith DC, Smith ADM
 #' (2017) Estimating stock depletion level from patterns of catch history. \emph{Fish and Fisheries}.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12201/abstract}

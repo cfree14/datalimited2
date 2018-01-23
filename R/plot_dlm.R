@@ -1,5 +1,5 @@
 
-#' Plot data-limited stock assessment output
+#' Plot data-limited stock assessment model output
 #'
 #' Plots the results of data-limited stock assessment models implemented in the
 #' \pkg{datalimited2} package.
@@ -19,12 +19,12 @@
 #' In all plots, dashed lines show the reference point target (i.e., B/BMSY = 1,
 #' F/FMSY = 1, or saturation = 0.5) and dotted lines show the overfishing limit
 #' (i.e., B/BMSY = 0.5 or saturation = 0.25). If MSY is estimated, the median value
-#' and 95\% confidence intervals are shown on the catch time series as a line and
-#' grey shading, respectively.
+#' and 95\% confidence intervals are shown in the catch time series plot as a horizontal dashed line and
+#' grey rectangle, respectively.
 #'
 #' @examples
 #' # Fit OCOM to catch time series and plot output
-#' output <- ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$tc, m=0.2)
+#' output <- ocom(year=YELLSNEMATL$year, catch=YELLSNEMATL$catch, m=0.2)
 #' plot_dlm(output)
 #' @export
 plot_dlm <- function(output){

@@ -34,33 +34,33 @@ BDM = function(K, r, S, b, C) {
 
 #' Optimized catch-only model
 #'
-#' Estimates saturation (B/K) and stock status (B/BMSY) time series and
-#' other biological quantities (i.e., r, k, MSY, final year saturation) from a time
-#' series of catch and natural mortality (M) estimate using the optimized
+#' Estimates biomass, saturation (B/K), and stock status (B/BMSY) time series and
+#' biological/management quantities (i.e., r, k, MSY, BMSY, FMSY) from a time
+#' series of catch and a natural mortality (M) estimate using the optimized
 #' catch-only model (OCOM) from Zhou et al. 2017.
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
 #' @param m Natural mortality (1/yr)
-#' @return A list of length nine containing the following elements:
-#' (1) a time series of biomass estimates;
-#' (2) a time series of saturation estimates;
-#' (3) a time series of B/BMSY estimates;
-#' (4) 1000 randomly selected biomass trajectories;
-#' (5) 1000 corresponding saturation trajectories;
-#' (6) 1000 corresponding B/BMSY trajectories;
-#' (7) the estimates of biological quanties r, k, MSY, and S;
-#' (8) 10,000 draws underpinning these values; and
-#' (9) the name of the method.
+#' @return A list with the following elements:
+#' \item{b_ts}{A data frame with time series of biomass estimates and confidence intervals}
+#' \item{s_ts}{A data frame with time series of saturation estimates and confidence intervals}
+#' \item{bbmsy_ts}{A data frame with time series of B/BMSY estimates and confidence intervals}
+#' \item{b_trajs}{A data frame with 1000 randomly selected biomass trajectories}
+#' \item{s_trajs}{A data frame with 1000 corresponding saturation trajectories}
+#' \item{bbmsy_trajs}{A data frame with 1000 corresponding B/BMSY trajectories}
+#' \item{krms}{A data frame with estimates of biological quanties r, k, MSY, and S and confidence intervals}
+#' \item{krms_draws}{A data frame with 10,000 draws underpinning the above values}
+#' \item{method}{Name of the method}
 #' @details The "optimized catch-only model" (OCOM) developed by Zhou et al. 2017
 #' employs a stock reduction analysis (SRA) using priors for r and stock depletion
-#' derived from natural mortality and saturation estimated by the Zhou-BRT method, respectively.
-#' The SRA uses a Schaefer biomass dynamics model and an algorithm for identifying
-#' feasible parameter combinations to estimate biological quantities such as B0, r,
-#' annual biomass, and depletion as well as management quantities such as MSY, BMSY, and FMSY.
+#' derived from natural mortality and saturation estimated using the Zhou-BRT method, respectively.
+#' The SRA employs a Schaefer biomass dynamics model and an algorithm for identifying
+#' feasible parameter combinations to estimate biomass, saturation, and stock status (B/BMSY) time series and
+#' biological/management quantities (i.e., r, K, MSY, BMSY, FMSY).
 #' @references Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
 #' (2017) An optimised catch-only assessment method for data poor fisheries.
-#' ICES Journal of Marine Science: doi:10.1093/icesjms/fsx226.
+#' \emph{ICES Journal of Marine Science}: doi:10.1093/icesjms/fsx226.
 #' \url{https://doi.org/10.1093/icesjms/fsx226}
 #' @examples
 #' # Fit OCOM to catch time series and plot output

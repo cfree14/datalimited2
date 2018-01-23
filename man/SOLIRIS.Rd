@@ -6,14 +6,14 @@
 \title{Irish Sea Common sole time series}
 \format{A data frame with 45 rows (years) and 4 variables:
 \describe{
-  \item{Stock}{stock id}
-  \item{yr}{year}
-  \item{ct}{catch, in metric tons}
-  \item{bt}{biomass, in metric tons}
+  \item{Stock}{Stock id}
+  \item{yr}{Year}
+  \item{ct}{Catch, in metric tons}
+  \item{bt}{Biomass, in metric tons}
 }}
 \source{
 Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
-Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
+Estimating fisheries reference points from catch and resilience. \emph{Fish and Fisheries} 18(3): 506-526.
 \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 }
 \usage{
@@ -21,7 +21,7 @@ SOLIRIS
 }
 \description{
 A dataset containing the catch and biomass time series for Irish Sea Common sole
-(Solea solea) from 1970-2014. This stock was used as an example in the cMSY/BSM
-user manual and is used to validate this package's implementation of cMSY and BSM.
+(\emph{Solea solea}) from 1970-2014. This stock was used as an example in the CMSY/BSM
+user manual and is used to validate the \pkg{datalimited2} package's implementation of both CMSY and BSM.
 }
 \keyword{datasets}

@@ -9,8 +9,8 @@ plot_cmsy2 <- function(output){
   ref_pts <- output[["ref_pts"]]
   ref_ts <- output[["ref_ts"]]
   priors <- output[["priors"]]
-  if(model=="cMSY"){rv <- output[["rv.all"]]}else{rv <- output[["r_out"]]}
-  if(model=="cMSY"){kv <- output[["kv.all"]]}else{kv <- output[["k_out"]]}
+  rv <- output[["r_viable"]]
+  kv <- output[["k_viable"]]
   bbmsy_final <- ref_ts$bbmsy[nrow(ref_ts)]
   ffmsy_final <- ref_ts$ffmsy[nrow(ref_ts)]
   yr1 <- min(ref_ts$year)

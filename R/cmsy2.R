@@ -12,7 +12,9 @@
 #     force.cmsy (removed b/c I seperate the cMSY/BSM models)
 #   OPTIONAL (but useful)
 #     r.low, r.hi, stb.low, stb.hi, int.yr,
-#     intb.low, intb.hi, endb.low, endb.hi, q.start, q.end
+#     intb.low, intb.hi, endb.low, endb.hi,
+#   OPTIONAL (but useful and only in BSM)
+#     q.start, q.end
 #   OPTIONAL & REMOVED (for comparison only, not used in analysis)
 #     Flim, Fpa, Blim, Bpa, Bmsy, FMSY, MSYBtrigger, B40, M, Fofl, SSB
 #   REMOVED - NOW DERIVED FROM CATCH DATA
@@ -43,7 +45,7 @@
 # # Optional parameters
 # r.low=0.18; r.hi=1.02
 # stb.low=NA; stb.hi=NA; int.yr=NA;
-# intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA; q.start=NA; q.end=NA
+# intb.low=NA; intb.hi=NA; endb.low=NA; endb.hi=NA
 
 # SchaeferParallelSearch
 ################################################################################
@@ -261,30 +263,40 @@ k_prior <- function(endbio, start.r, ct){
 # Fit cMSY-17 model
 ################################################################################
 
-#' cMSY catch-only stock assessment model
+#' CMSY catch-only stock assessment model
 #'
-#' Estimates B/BMSY time series and other biological quantities (e.g., r, K, MSY) from
-#' a time series of catch and a resilience estimate using cMSY from Froese et al. 2017.
+#' Estimates biomass, fishing mortality, and stock status (i.e., B/BMSY, F/FMSY)
+#' time series and biological/management quantities (i.e., r, K, MSY, BMSY, FMSY)
+#' from a time series of catch and a resilience estimate using CMSY from Froese et al. 2017.
 #'
 #' @param year A time series of years
 #' @param catch A time series of catch
-#' @param resilience Resilience of the stock: "High", "Medium", "Low", "Very low"
-#' @param r.low,r.hi A user-specified prior on the species intrinsic growth rate, r (optional)
+#' @param resilience Resilience of the stock: "High", "Medium", "Low", or "Very low" (optional if \code{r.low} and \code{r.hi} are specified)
+#' @param r.low,r.hi A user-specified prior on the species intrinsic growth rate, r (optional if \code{resilience} is specified)
 #' @param stb.low,stb.hi A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)
 #' @param int.yr A user-specified year of intermediate biomass (optional)
-#' @param intb.low,intb.hi A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)
+#' @param intb.low,intb.hi A user-specified prior on biomass relative to unfished biomass in the year of intermediate biomass (optional)
 #' @param endb.low,endb.hi A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)
-#' @param q.start,q.end A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)
-#' @param verbose Set to FALSE to suppress printed updates on cMSY/BSM progress (default=TRUE)
-#' @return A list containing the following elements:
-#' (1) ref_pts - A dataframe with biological quantity / reference point estimates with 95\% confidence intervals;
-#' (2) ref_ts - A dataframe with B/BMSY and reference point time series with 95\% confidence intervals;
-#' (3) priors - A dataframe with the priors used in the cMSY analysis;
-#' (4) rv.all - A vector with the viable r values;
-#' (5) kv.all - A vector with the viable k values;
-#' (6) btv.all - A dataframe with the biomass trajectories produced by the viable r/K pairs.
+#' @param verbose Set to FALSE to suppress printed updates on model progress (default=TRUE)
+#' @return A list with the following elements:
+#' \item{ref_pts}{A data frame with biological quantity and reference point estimates with 95\% confidence intervals}
+#' \item{ref_ts}{A data frame with B/BMSY, F/FMSY, biomass, and fishing mortality time series with 95\% confidence intervals}
+#' \item{priors}{A data frame with the priors used in the analysis}
+#' \item{r_viable}{A vector with the viable r values}
+#' \item{k_viable}{A vector with the viable K values}
+#' \item{bt_viable}{A data frame with the biomass trajectories produced by the viable r/K pairs}
+#' \item{method}{Name of the method}
+#' @details The CMSY model developed by Froese et al. 2017 employs a stock
+#' reduction analysis using priors for r based on resilience, K based on
+#' maximum catch and the r priors, and start, intermediate, and final year
+#' saturation based on a set of simple rules. It also allows
+#' users to revise the default priors based on expert knowledge. The SRA employs
+#' a Schaefer biomass dynamics model and an algorithm for identifying feasible
+#' parameter combinations to estimate biomass, fishing mortality, and stock status
+#' (i.e., B/BMSY, F/FMSY) time series and biological/management quantities
+#' (i.e., r, K, MSY, BMSY, FMSY).
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
-#' Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
+#' Estimating fisheries reference points from catch and resilience. \emph{Fish and Fisheries} 18(3): 506-526.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 #' @examples
 #' # Fit cMSY to catch time series and plot output
@@ -297,10 +309,13 @@ k_prior <- function(endbio, start.r, ct){
 #' @export
 cmsy2 <- function(year, catch, resilience=NA,
                   r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
-                  intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, q.start=NA, q.end=NA, verbose=T){
+                  intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, verbose=T){
 
   # Perform a few error checks
+  res_vals <- c("High", "Medium", "Low", "Very low")
   if(sum(is.na(catch))>0){stop("Error: NA in catch time series. Fill or interpolate.")}
+  if(is.na(resilience) & (is.na(r.low) | is.na(r.hi))){stop("Error: Either a resilience estimate or a complete user-specified r prior (both r.low and r.hi) must be provided.")}
+  if(!is.na(resilience) & !(resilience%in%res_vals)){stop("Error: Resilience must be 'High', 'Medium', 'Low', or 'Very low' (case-sensitive).")}
 
   # Set model parameters
   #############################################################
@@ -636,7 +651,7 @@ cmsy2 <- function(year, catch, resilience=NA,
 
   # Return
   out <- list(ref_pts=ref_pts, ref_ts=ref_ts, priors=priors,
-              rv.all=rv.all, kv.all=kv.all, btv.all=btv.all, method="cMSY")
+              r_viable=rv.all, k_viable=kv.all, bt_viable=btv.all, method="cMSY")
   return(out)
 
 }

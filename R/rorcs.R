@@ -1,23 +1,4 @@
 
-# For testing
-################################################################################
-
-# For testing
-# load("data/refined_orcs_approach_bct_model.Rdata")
-# scores <- c(2, # TOA 1 - Status of assessed stocks in fishery
-#             NA, # TOA 3 - Behavior affecting capture (2 or 3 only)
-#             1, # TOA 5 - Discard rate
-#             2, # TOA 6 - Targeting intensity
-#             NA, # TOA 7 - M compared to dominant species
-#             2, # TOA 8 - Occurence in catch
-#             1.51, # TOA 9 - Value (US$/lb) - continuous value
-#             3, # TOA 10 - Recent trends in catch
-#             1, # TOA 11 - Habitat loss
-#             2, # TOA 12 - Recent trend in effort
-#             2, # TOA 13 - Recent trend in abundance index
-#             1) # TOA 14 - Proportion of population protected
-# rorcs(scores)
-
 # rORCS function
 ################################################################################
 
@@ -25,11 +6,11 @@
 #'
 #' Estimates stock status (i.e., under, fully, or overexploited) from 12 stock- and
 #' fishery-related predictors using the refined ORCS approach from Free et al. 2017.
-#' Stock status categories are defined as follows: (1) B/BMSY>1.5 = underexploited;
-#' (2) 0.5<B/BMSY<1.5 = fully exploited; and (3) B/BMSY<0.5 = overexploited.
+#' Stock status categories are defined as follows: (1) B/BMSY > 1.5 = underexploited;
+#' (2) 0.5 < B/BMSY < 1.5 = fully exploited; and (3) B/BMSY < 0.5 = overexploited.
 #'
 #' @param scores A numeric vector of length twelve containing scores for the
-#' following "Table of Attributes" questions:
+#' following "Table of Attributes" questions (see Free et al. 2017 for more details):
 #' \itemize{
 #'   \item{TOA 1 - Status of assessed stocks in fishery}
 #'   \item{TOA 3 - Behavior affecting capture (2 or 3 only)}
@@ -44,10 +25,10 @@
 #'   \item{TOA 13 - Recent trend in abundance index}
 #'   \item{TOA 14 - Proportion of population protected}
 #' }
-#' @return A dataframe containing the probability that a stock is under, fully,
-#' or overexploited where the status estimate is the most probable category.
+#' @return A data frame containing the probability that a stock is under, fully,
+#' or overexploited with stock status identified by the most probable category.
 #' @details The refined ORCS approach (rORCS) uses a boosted classification tree
-#' model trained on the RAMLDB to estimate stock status (i.e., under, fully,
+#' model trained on the RAM Legacy Database to estimate stock status (i.e., under, fully,
 #' or overexploited) from twelve stock- and fishery-related predictors, the
 #' most important of which are the value of the taxa, status of the assessed
 #' stocks in the fishery, targeting intensity, discard rate, and occurrence in

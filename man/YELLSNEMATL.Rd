@@ -4,18 +4,22 @@
 \name{YELLSNEMATL}
 \alias{YELLSNEMATL}
 \title{USA SNE/MA Yellowtail flounder time series}
-\format{A data frame with 42 rows (years) and XX variables:
+\format{A data frame with 42 rows (years) and 7 variables:
 \describe{
-  \item{Stock}{stock id}
-  \item{yr}{year}
-  \item{ct}{catch, in metric tons}
-  ...
+  \item{stockid}{Stock id}
+  \item{year}{Year}
+  \item{catch}{Catch, in metric tons}
+  \item{biomass}{Spawning stock biomass (SSB), in metric tons}
+  \item{f}{Fishing mortality rate}
+  \item{bbmsy}{B/BMSY}
+  \item{ffmsy}{F/FMSY}
 }}
 \usage{
 YELLSNEMATL
 }
 \description{
-A dataset containing the catch time series for USA SNE/MA Yellowtail flounder
-(Pleuronectes ferruginea) from 1973-2014.
+A dataset containing the catch and biomass time series for USA Southern
+New England/Mid-Atlantic (SNE/MA) Yellowtail flounder (\emph{Pleuronectes ferruginea}) from 1973-2014.
+This dataset is included for additional testing of the \pkg{datalimited2} package.
 }
 \keyword{datasets}

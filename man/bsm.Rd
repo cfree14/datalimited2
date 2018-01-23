@@ -13,40 +13,63 @@ bsm(year, catch, biomass, btype, resilience = NA, r.low = NA, r.hi = NA,
 
 \item{catch}{A time series of catch}
 
-\item{biomass}{A time series of biomass or CPUE (type is designated in btype)}
+\item{biomass}{A time series of biomass or CPUE (specifiy type in \code{btype})}
 
-\item{btype}{Biomass time series type: "None", "biomass", or "CPUE"}
+\item{btype}{Biomass time series type: "CPUE" or "biomass" (≥ 5 years required)}
 
-\item{resilience}{Resilience of the stock: "High", "Medium", "Low", "Very low"}
+\item{resilience}{Resilience of the stock: "High", "Medium", "Low", or "Very low" (optional if \code{r.low} and \code{r.hi} are specified)}
 
-\item{r.low, r.hi}{A user-specified prior on the species intrinsic growth rate, r (optional)}
+\item{r.low, r.hi}{A user-specified prior on the species intrinsic growth rate, r (optional if \code{resilience} is specified)}
 
 \item{stb.low, stb.hi}{A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)}
 
 \item{int.yr}{A user-specified year of intermediate biomass (optional)}
 
-\item{intb.low, intb.hi}{A user-specified prior on biomass relative to unfished biomass in the intermediate year (optional)}
+\item{intb.low, intb.hi}{A user-specified prior on biomass relative to unfished biomass in the year of intermediate biomass (optional)}
 
 \item{endb.low, endb.hi}{A user-specified prior on biomass relative to unfished biomass at the end of the catch time series (optional)}
 
-\item{q.start, q.end}{A user-specified start and end year for estimating the catchability coefficient (optional; default is last 5 years)}
+\item{q.start, q.end}{A user-specified start and end year for estimating the catchability coefficient (optional)}
 
-\item{verbose}{Set to FALSE to suppress printed updates on CMSY/BSM progress (default=TRUE)}
+\item{verbose}{Set to FALSE to suppress printed updates on model progress (default=TRUE)}
 }
 \value{
-A time series of B/BSMY estimates and other stuff
+A list with the following elements:
+\item{ref_pts}{A data frame with biological quantity and reference point estimates with 95\% confidence intervals}
+\item{ref_ts}{A data frame with B/BMSY, F/FMSY, biomass, and fishing mortality time series with 95\% confidence intervals}
+\item{priors}{A data frame with the priors used in the analysis}
+\item{r_viable}{A vector with the viable r values}
+\item{k_viable}{A vector with the viable K values}
+\item{method}{Name of the method}
 }
 \description{
-Estimates B/BMSY time series and other biological quantities (e.g., r, k, MSY)
+Estimates biomass, fishing mortality, and stock status (i.e., B/BMSY, F/FMSY)
+time series and biological/management quantities (i.e., r, K, MSY, BMSY, FMSY)
 from a time series of catch and a resilience estimate using the Bayesian surplus
-produciton model from Froese et al. (2017).
+production model from Froese et al. 2017.
+}
+\details{
+The Bayesian state-space surplus production model (BSM) developed by
+Froese et al. 2017 is fitted using a catch time series and any available
+(i.e., doesn't have to be complete) biomass or catch-per-unit-effort (CPUE) data.
+It extends the algorithms used to set bounds for r, K, and start, intermediate,
+and final year saturation in CMSY by deriving density distributions from these
+originally uniform bounds and by adding a prior for catchability, q. BSM estimates
+biomass, fishing mortality, and stock status (i.e., B/BMSY, F/FMSY) time series
+and biological/management quantities (i.e., r, K, MSY, BMSY, FMSY).
 }
 \examples{
-output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt, btype="CPUE", r.low=0.18, r.hi=1.02)
+# Fit BSM to catch time series and plot output
+output <- bsm(year=SOLIRIS$yr, catch=SOLIRIS$ct, biomass=SOLIRIS$bt,
+              btype="CPUE", r.low=0.18, r.hi=1.02)
 plot_dlm(output)
+
+# Extract reference points and time series from output
+ref_pts <- output[["ref_pts"]]
+ref_ts <- output[["ref_ts"]]
 }
 \references{
 Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
-Estimating fisheries reference points from catch and resilience. Fish and Fisheries 18(3): 506-526.
+Estimating fisheries reference points from catch and resilience. \emph{Fish and Fisheries} 18(3): 506-526.
 \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
 }
