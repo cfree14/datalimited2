@@ -15,7 +15,7 @@ bsm(year, catch, biomass, btype, resilience = NA, r.low = NA, r.hi = NA,
 
 \item{biomass}{A time series of biomass or CPUE (specifiy type in \code{btype})}
 
-\item{btype}{Biomass time series type: "CPUE" or "biomass" (≥ 5 years required)}
+\item{btype}{Biomass time series type: "CPUE" or "biomass" (at least 5 years required)}
 
 \item{resilience}{Resilience of the stock: "High", "Medium", "Low", or "Very low" (optional if \code{r.low} and \code{r.hi} are specified)}
 

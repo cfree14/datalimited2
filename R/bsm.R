@@ -59,7 +59,7 @@
 #' @param year A time series of years
 #' @param catch A time series of catch
 #' @param biomass A time series of biomass or CPUE (specifiy type in \code{btype})
-#' @param btype Biomass time series type: "CPUE" or "biomass" (≥ 5 years required)
+#' @param btype Biomass time series type: "CPUE" or "biomass" (at least 5 years required)
 #' @param resilience Resilience of the stock: "High", "Medium", "Low", or "Very low" (optional if \code{r.low} and \code{r.hi} are specified)
 #' @param r.low,r.hi A user-specified prior on the species intrinsic growth rate, r (optional if \code{resilience} is specified)
 #' @param stb.low,stb.hi A user-specified prior on biomass relative to unfished biomass at the beginning of the catch time series (optional)
