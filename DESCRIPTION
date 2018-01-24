@@ -6,7 +6,7 @@ Date: 2018-01-05
 Authors@R: person(c("Christopher", "M."), "Free", email = "cfree14@gmail.com", role = c("aut", "cre"))
 Description: Methods for estimating B/BMSY from fisheries catch time series.
 URL: https://github.com/cfree14/datalimited2
-Depends: R (>= 3.4.2)
+Depends: R (>= 3.3.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
