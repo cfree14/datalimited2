@@ -1,4 +1,8 @@
 
+# For testing
+# load("data/TIGERFLAT.rda")
+# year <- TIGERFLAT$yr;  catch <- TIGERFLAT$catch; m=0.27
+
 # OCOM helper functions
 ################################################################################
 
@@ -34,7 +38,7 @@ BDM = function(K, r, S, b, C) {
 
 #' Optimized catch-only model
 #'
-#' Estimates biomass, saturation (B/K), and stock status (B/BMSY) time series and
+#' Estimates biomass, fishing mortality, and stock status (B/BMSY, F/FMSY) time series and
 #' biological/management quantities (i.e., r, k, MSY, BMSY, FMSY) from a time
 #' series of catch and a natural mortality (M) estimate using the optimized
 #' catch-only model (OCOM) from Zhou et al. 2017.
@@ -43,20 +47,25 @@ BDM = function(K, r, S, b, C) {
 #' @param catch A time series of catch
 #' @param m Natural mortality (1/yr)
 #' @return A list with the following elements:
-#' \item{b_ts}{A data frame with time series of biomass estimates and confidence intervals}
-#' \item{s_ts}{A data frame with time series of saturation estimates and confidence intervals}
-#' \item{bbmsy_ts}{A data frame with time series of B/BMSY estimates and confidence intervals}
+#' \item{ref_pts}{A data frame with estimates of r, k, MSY, BMSY, FMSY and final year saturation and confidence intervals}
+#' \item{ref_ts}{A data frame with time series of biomass, saturation, fishing mortality, B/BMSY, and F/FMSY estimates and 95\% confidence intervals}
+#' \item{b_ts}{A data frame with time series of biomass estimates and expanded confidence intervals}
+#' \item{s_ts}{A data frame with time series of saturation estimates and expanded confidence intervals}
+#' \item{f_ts}{A data frame with time series of fishing mortality (F) estimates and expanded confidence intervals}
+#' \item{bbmsy_ts}{A data frame with time series of B/BMSY estimates and expanded confidence intervals}
+#' \item{ffmsy_ts}{A data frame with time series of F/FMSY estimates and expanded confidence intervals}
 #' \item{b_trajs}{A data frame with 1000 randomly selected biomass trajectories}
 #' \item{s_trajs}{A data frame with 1000 corresponding saturation trajectories}
+#' \item{f_trajs}{A data frame with 1000 corresponding fishing mortality (F) trajectories}
 #' \item{bbmsy_trajs}{A data frame with 1000 corresponding B/BMSY trajectories}
-#' \item{krms}{A data frame with estimates of biological quanties r, k, MSY, and S and confidence intervals}
-#' \item{krms_draws}{A data frame with 10,000 draws underpinning the above values}
+#' \item{ffmsy_trajs}{A data frame with 1000 corresponding F/FMSY trajectories}
+#' \item{krms_draws}{A data frame with 10,000 draws underpinning the estimakes of r, k, MSY, and saturation}
 #' \item{method}{Name of the method}
 #' @details The "optimized catch-only model" (OCOM) developed by Zhou et al. 2017
 #' employs a stock reduction analysis (SRA) using priors for r and stock depletion
 #' derived from natural mortality and saturation estimated using the Zhou-BRT method, respectively.
 #' The SRA employs a Schaefer biomass dynamics model and an algorithm for identifying
-#' feasible parameter combinations to estimate biomass, saturation, and stock status (B/BMSY) time series and
+#' feasible parameter combinations to estimate biomass, fishing mortality, and stock status (B/BMSY, F/FMSY) time series and
 #' biological/management quantities (i.e., r, K, MSY, BMSY, FMSY).
 #' @references Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
 #' (2017) An optimised catch-only assessment method for data poor fisheries.
@@ -69,9 +78,8 @@ BDM = function(K, r, S, b, C) {
 #' plot_dlm(output)
 #'
 #' # Extract reference points and time series from output
-#' b_ts <- output[["b_ts"]]
-#' bbmsy_ts <- output[["bbmsy_ts"]]
-#' krms <- output[["krms"]]
+#' ref_pts <- output[["ref_pts"]]
+#' ref_ts <- output[["ref_ts"]]
 #' @export
 ocom <- function(year, catch, m){
 
@@ -167,43 +175,80 @@ ocom <- function(year, catch, m){
   b_sds <- apply(b_trajs, 1, stats::sd)
   b_ts <- data.frame(year=yr, catch=C, b_quants, avg=b_avgs, sd=b_sds)
 
-  # Create B/BMSY time series
+  # Fishing mortality time series (added by CMF)
+  f_trajs <- apply(b_trajs, 2, function(x) catch / x)
+  f_quants <- t(apply(f_trajs, 1, function(x) stats::quantile(x, quants)))
+  colnames(f_quants) <- paste0("q", quants)
+  f_avgs <- apply(f_trajs, 1, mean)
+  f_sds <- apply(f_trajs, 1, stats::sd)
+  f_ts <- data.frame(year=yr, catch=C, f_quants, avg=f_avgs, sd=f_sds)
+
+  # Ref points
   ########################################
 
-  # Convert to B/BMSY
-  # S = B / K
-  # B/BMSY =
-  s_trajs <- apply(b_trajs, 2, function(x) x/x[1])
-  bbmsy_trajs <- s2bbmsy(s_trajs)
+  # Biological quantities and reference points (added by CMF)
+  krms_draws <- kr2
+  krms <- data.frame(t(summ))
+  r <- krms["r",]
+  k <- krms["k",]
+  msy <- krms["msy",]
+  bmsy <- k / 2
+  fmsy <- r / 2
+  s_final <- krms["s",]
+  ref_pts <- data.frame(rbind(r, k, msy, bmsy, fmsy, s_final))
+  ref_pts$param <- c("r", "k", "msy", "bmsy", "fmsy", "s_final")
+  rownames(ref_pts) <- NULL
+  colnames(ref_pts) <- c(paste0("q", quants), "param")
+  ref_pts <- subset(ref_pts, select=c(param, q0.025, q0.25, q0.5, q0.75, q0.975))
 
-  # Build B/BMSY dataframe
+  # Create B/BMSY and F/FMSY time series
+  ########################################
+
+  # Saturation time series (added by CMF)
+  s_trajs <- apply(b_trajs, 2, function(x) x/x[1])
   s_quants <- t(apply(s_trajs, 1, function(x) stats::quantile(x, quants)))
   colnames(s_quants) <- paste0("q", quants)
   s_avgs <- apply(s_trajs, 1, mean)
   s_sds <- apply(s_trajs, 1, stats::sd)
   s_ts <- data.frame(year=yr, catch=C, s_quants, avg=s_avgs, sd=s_sds)
 
-  # Build B/BMSY dataframe
+  # Build B/BMSY dataframe (added by CMF)
+  bbmsy_trajs <- s2bbmsy(s_trajs)
   bbmsy_quants <- t(apply(bbmsy_trajs, 1, function(x) stats::quantile(x, quants)))
   colnames(bbmsy_quants) <- paste0("q", quants)
   bbmsy_avgs <- apply(bbmsy_trajs, 1, mean)
   bbmsy_sds <- apply(bbmsy_trajs, 1, stats::sd)
   bbmsy_ts <- data.frame(year=yr, catch=C, bbmsy_quants, avg=bbmsy_avgs, sd=bbmsy_sds)
 
+  # Build F/FMSY dataframe (added by CMF)
+  ffmsy_trajs <- f_trajs / ref_pts$q0.5[ref_pts$param=="fmsy"]
+  ffmsy_quants <- t(apply(ffmsy_trajs, 1, function(x) stats::quantile(x, quants)))
+  colnames(ffmsy_quants) <- paste0("q", quants)
+  ffmsy_avgs <- apply(ffmsy_trajs, 1, mean)
+  ffmsy_sds <- apply(ffmsy_trajs, 1, stats::sd)
+  ffmsy_ts <- data.frame(year=yr, catch=C, ffmsy_quants, avg=ffmsy_avgs, sd=ffmsy_sds)
+
+  # Create simple time series data frame
+  ref_ts <- cbind(subset(b_ts, select=c(year, catch, q0.5, q0.025, q0.975)),
+                  subset(s_ts, select=c(q0.5, q0.025, q0.975)),
+                  subset(f_ts, select=c(q0.5, q0.025, q0.975)),
+                  subset(bbmsy_ts, select=c(q0.5, q0.025, q0.975)),
+                  subset(ffmsy_ts, select=c(q0.5, q0.025, q0.975)))
+  colnames(ref_ts) <- c("year", "catch",
+                        "b", "b_lo", "b_hi",
+                        "s", "s_lo", "s_hi",
+                        "f", "f_lo", "f_hi",
+                        "bbmsy", "bbmsy_lo", "bbmsy_hi",
+                        "ffmsy", "ffmsy_lo", "ffmsy_hi")
+
   # Create model output
   ########################################
 
-  # Format parameter estimates
-  krms <- data.frame(t(summ))
-  colnames(krms) <- paste0("q", quants)
-  krms$param <- c("k", "r", "msy", "s")
-  krms <- subset(krms, select=c(param, q0.025, q0.25, q0.5, q0.75, q0.975))
-
   # Prep for export
-  krms_draws <- kr2
-  output <- list(b_ts=b_ts, s_ts=s_ts, bbmsy_ts=bbmsy_ts,
-                 b_trajs=b_trajs, s_trajs=s_trajs, bbmsy_trajs=bbmsy_trajs,
-                 krms=krms, krms_draws=krms_draws, method="OCOM")
+  output <- list(ref_pts=ref_pts, ref_ts=ref_ts,
+                 b_ts=b_ts, s_ts=s_ts, f_ts=f_ts, bbmsy_ts=bbmsy_ts, ffmsy_ts=ffmsy_ts,
+                 b_trajs=b_trajs, s_trajs=s_trajs, f_trajs=f_trajs, bbmsy_trajs=bbmsy_trajs, ffmsy_trajs=ffmsy_trajs,
+                 krms_draws=krms_draws, method="OCOM")
   return(output)
 
 }
