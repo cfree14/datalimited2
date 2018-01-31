@@ -57,6 +57,9 @@ and final year saturation in CMSY by deriving density distributions from these
 originally uniform bounds and by adding a prior for catchability, q. BSM estimates
 biomass, fishing mortality, and stock status (i.e., B/BMSY, F/FMSY) time series
 and biological/management quantities (i.e., r, K, MSY, BMSY, FMSY).
+
+#' This implementation of BSM is based on "version q". BSM is constantly being improved
+so please consult the original authors about where to find the most up-to-date method.
 }
 \examples{
 # Fit BSM to catch time series and plot output
