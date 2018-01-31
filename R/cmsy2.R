@@ -295,6 +295,10 @@ k_prior <- function(endbio, start.r, ct){
 #' parameter combinations to estimate biomass, fishing mortality, and stock status
 #' (i.e., B/BMSY, F/FMSY) time series and biological/management quantities
 #' (i.e., r, K, MSY, BMSY, FMSY).
+#'
+#' This implementation of CMSY is based on "version q". CMSY is constantly being improved
+#' so please consult the original authors about where to find the most up-to-date method.
+#'
 #' @references Froese R, Demirel N, Coro G, Kleisner KM, Winker H (2017)
 #' Estimating fisheries reference points from catch and resilience. \emph{Fish and Fisheries} 18(3): 506-526.
 #' \url{http://onlinelibrary.wiley.com/doi/10.1111/faf.12190/abstract}
