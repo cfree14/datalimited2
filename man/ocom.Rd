@@ -15,18 +15,23 @@ ocom(year, catch, m)
 }
 \value{
 A list with the following elements:
-\item{b_ts}{A data frame with time series of biomass estimates and confidence intervals}
-\item{s_ts}{A data frame with time series of saturation estimates and confidence intervals}
-\item{bbmsy_ts}{A data frame with time series of B/BMSY estimates and confidence intervals}
+\item{ref_pts}{A data frame with estimates of r, k, MSY, BMSY, FMSY and final year saturation and confidence intervals}
+\item{ref_ts}{A data frame with time series of biomass, saturation, fishing mortality, B/BMSY, and F/FMSY estimates and 95\% confidence intervals}
+\item{b_ts}{A data frame with time series of biomass estimates and expanded confidence intervals}
+\item{s_ts}{A data frame with time series of saturation estimates and expanded confidence intervals}
+\item{f_ts}{A data frame with time series of fishing mortality (F) estimates and expanded confidence intervals}
+\item{bbmsy_ts}{A data frame with time series of B/BMSY estimates and expanded confidence intervals}
+\item{ffmsy_ts}{A data frame with time series of F/FMSY estimates and expanded confidence intervals}
 \item{b_trajs}{A data frame with 1000 randomly selected biomass trajectories}
 \item{s_trajs}{A data frame with 1000 corresponding saturation trajectories}
+\item{f_trajs}{A data frame with 1000 corresponding fishing mortality (F) trajectories}
 \item{bbmsy_trajs}{A data frame with 1000 corresponding B/BMSY trajectories}
-\item{krms}{A data frame with estimates of biological quanties r, k, MSY, and S and confidence intervals}
-\item{krms_draws}{A data frame with 10,000 draws underpinning the above values}
+\item{ffmsy_trajs}{A data frame with 1000 corresponding F/FMSY trajectories}
+\item{krms_draws}{A data frame with 10,000 draws underpinning the estimakes of r, k, MSY, and saturation}
 \item{method}{Name of the method}
 }
 \description{
-Estimates biomass, saturation (B/K), and stock status (B/BMSY) time series and
+Estimates biomass, fishing mortality, and stock status (B/BMSY, F/FMSY) time series and
 biological/management quantities (i.e., r, k, MSY, BMSY, FMSY) from a time
 series of catch and a natural mortality (M) estimate using the optimized
 catch-only model (OCOM) from Zhou et al. 2017.
@@ -36,7 +41,7 @@ The "optimized catch-only model" (OCOM) developed by Zhou et al. 2017
 employs a stock reduction analysis (SRA) using priors for r and stock depletion
 derived from natural mortality and saturation estimated using the Zhou-BRT method, respectively.
 The SRA employs a Schaefer biomass dynamics model and an algorithm for identifying
-feasible parameter combinations to estimate biomass, saturation, and stock status (B/BMSY) time series and
+feasible parameter combinations to estimate biomass, fishing mortality, and stock status (B/BMSY, F/FMSY) time series and
 biological/management quantities (i.e., r, K, MSY, BMSY, FMSY).
 }
 \examples{
@@ -46,9 +51,8 @@ output <- ocom(year=TIGERFLAT$yr, catch=TIGERFLAT$catch, m=0.27)
 plot_dlm(output)
 
 # Extract reference points and time series from output
-b_ts <- output[["b_ts"]]
-bbmsy_ts <- output[["bbmsy_ts"]]
-krms <- output[["krms"]]
+ref_pts <- output[["ref_pts"]]
+ref_ts <- output[["ref_ts"]]
 }
 \references{
 Zhou S, Punt AE, Smith ADM, Ye Y, Haddon M, Dichmont CM, Smith DC
