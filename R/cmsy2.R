@@ -311,6 +311,9 @@ cmsy2 <- function(year, catch, resilience=NA,
                   r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
                   intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, verbose=T){
 
+  # Display 3 digits
+  options(digits=3)
+
   # Perform a few error checks
   res_vals <- c("High", "Medium", "Low", "Very low")
   if(sum(is.na(catch))>0){stop("Error: NA in catch time series. Fill or interpolate.")}
@@ -603,8 +606,8 @@ cmsy2 <- function(year, catch, resilience=NA,
     cat("\nResults of CMSY analysis \n")
     cat("-------------------------\n")
     cat("Altogether", n.viable.b, "viable trajectories for", n.viable.pt," r-k pairs were found \n")
-    cat("r   =", r.est,", 95% CL =", lcl.r.est, "-", ucl.r.est,", k =", k.est*1000,", 95% CL =", lcl.k.est*1000, "-", ucl.k.est*1000,"\n")
-    cat("MSY =", MSY.est*1000,", 95% CL =", lcl.MSY.est*1000, "-", ucl.MSY.est*1000,"\n")
+    cat("r   =", r.est,", 95% CL =", lcl.r.est, "-", ucl.r.est,", k =", k.est,", 95% CL =", lcl.k.est, "-", ucl.k.est,"\n")
+    cat("MSY =", MSY.est,", 95% CL =", lcl.MSY.est, "-", ucl.MSY.est,"\n")
     cat("Relative biomass in last year =", median.btv.lastyr, "k, 2.5th perc =", lcl.median.btv.lastyr,
         ", 97.5th perc =", ucl.median.btv.lastyr,"\n")
     cat("Exploitation F/(r/2) in last year =", (F.CMSY/Fmsy.CMSY)[nyr],"\n\n")
@@ -613,9 +616,9 @@ cmsy2 <- function(year, catch, resilience=NA,
     cat("-------------------------------------------------------------\n")
     cat("Fmsy =",Fmsy,", 95% CL =",lcl.Fmsy,"-",ucl.Fmsy,"(if B > 1/2 Bmsy then Fmsy = 0.5 r)\n")
     cat("Fmsy =",Fmsy.last,", 95% CL =",lcl.Fmsy.last,"-",ucl.Fmsy.last,"(r and Fmsy are linearly reduced if B < 1/2 Bmsy)\n")
-    cat("MSY  =",MSY*1000,", 95% CL =",lcl.MSY*1000,"-",ucl.MSY*1000,"\n")
-    cat("Bmsy =",Bmsy*1000,", 95% CL =",lcl.Bmsy*1000,"-",ucl.Bmsy*1000,"\n")
-    cat("Biomass in last year =",B.last*1000,", 2.5th perc =", lcl.B.last*1000, ", 97.5 perc =",ucl.B.last*1000,"\n")
+    cat("MSY  =",MSY,", 95% CL =",lcl.MSY,"-",ucl.MSY,"\n")
+    cat("Bmsy =",Bmsy,", 95% CL =",lcl.Bmsy,"-",ucl.Bmsy,"\n")
+    cat("Biomass in last year =",B.last,", 2.5th perc =", lcl.B.last, ", 97.5 perc =",ucl.B.last,"\n")
     cat("B/Bmsy in last year  =",B.Bmsy.last,", 2.5th perc =", lcl.B.Bmsy.last, ", 97.5 perc =",ucl.B.Bmsy.last,"\n")
     cat("Fishing mortality in last year =",F.last,", 2.5th perc =", lcl.F.last, ", 97.5 perc =",ucl.F.last,"\n")
     cat("Exploitation F/Fmsy  =",F.Fmsy.last,", 2.5th perc =", lcl.F.Fmsy.last, ", 97.5 perc =",ucl.F.Fmsy.last,"\n")
