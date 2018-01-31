@@ -10,11 +10,14 @@ plot_cmsy2 <- function(output){
   ref_ts <- output[["ref_ts"]]
   priors <- output[["priors"]]
   rv <- output[["r_viable"]]
-  kv <- output[["k_viable"]]
+  kv <- output[["k_viable"]]/1000
   bbmsy_final <- ref_ts$bbmsy[nrow(ref_ts)]
   ffmsy_final <- ref_ts$ffmsy[nrow(ref_ts)]
   yr1 <- min(ref_ts$year)
   yr2 <- max(ref_ts$year)
+
+  # Convert catch
+  ref_ts$catch <- ref_ts$catch / 1000
 
   # Plotting parameters
   par(mfrow=c(2,3))
@@ -25,33 +28,35 @@ plot_cmsy2 <- function(output){
   # Plot catch
   xmin <- floor(min(ref_ts$year) / 10) * 10
   xmax <- ceiling(max(ref_ts$year) / 10) * 10
+  ymax <- ceiling(max(ref_ts$catch) / 10) * 10
   plot(catch ~ year, ref_ts, bty="n", las=1, type="n",
-       xlim=c(xmin, xmax), xlab="", ylab="Catch", main="A. Catch")
+       xlim=c(xmin, xmax), ylim=c(0,ymax),
+       xlab="", ylab="Catch (in 1000s)", main="A. Catch")
   # Add MSY shading
   rect(xleft=xmin, xright=xmax,
-       ybottom=ref_pts$lo[ref_pts$param=="msy"],
-       ytop=ref_pts$hi[ref_pts$param=="msy"], col="grey70", border=F)
+       ybottom=ref_pts$lo[ref_pts$param=="msy"]/1000,
+       ytop=ref_pts$hi[ref_pts$param=="msy"]/1000, col="grey70", border=F)
   # Add catch
   lines(ref_ts$year, ref_ts$catch, lwd=1.2)
   # Add MSY line and stats
-  lines(x=c(xmin, xmax), y=rep(ref_pts$est[ref_pts$param=="msy"], 2), lty=2)
-  text(x=xmax-5, y=ref_pts$est[ref_pts$param=="msy"], pos=c(3), labels="MSY", font=2, xpd=NA)
+  lines(x=c(xmin, xmax), y=rep(ref_pts$est[ref_pts$param=="msy"]/1000, 2), lty=2)
+  text(x=xmax-5, y=ref_pts$est[ref_pts$param=="msy"]/1000, pos=c(3), labels="MSY", font=2, xpd=NA)
 
   # B. Viable r/k pairs
   ##############################################################
 
   # Extract r/k info
   start.r <- unlist(priors[priors$param=="r", c("lo", "hi")])
-  start.k <- unlist(priors[priors$param=="k", c("lo", "hi")])*1000
+  start.k <- unlist(priors[priors$param=="k", c("lo", "hi")])
   r <- ref_pts$est[ref_pts$param=="r"]
   r_lo <- ref_pts$lo[ref_pts$param=="r"]
   r_hi <- ref_pts$hi[ref_pts$param=="r"]
-  k <- ref_pts$est[ref_pts$param=="k"]
-  k_lo <- ref_pts$lo[ref_pts$param=="k"]
-  k_hi <- ref_pts$hi[ref_pts$param=="k"]
+  k <- ref_pts$est[ref_pts$param=="k"]/1000
+  k_lo <- ref_pts$lo[ref_pts$param=="k"]/1000
+  k_hi <- ref_pts$hi[ref_pts$param=="k"]/1000
 
   # Plot all r-k pairs
-  plot(x=1:10, y=1:10, type="n", xlim = start.r, ylim = start.k, log="xy", xlab="r", ylab="K",
+  plot(x=1:10, y=1:10, type="n", xlim = start.r, ylim = start.k, log="xy", xlab="r", ylab="K (in 1000s)",
        main="B: Viable r-K pairs", pch=".", cex=3, bty="l", col="gray95", las=1)
   rect(xleft=start.r[1], ybottom=start.k[1], xright=start.r[2], ytop=start.k[2], col="grey95", border=F)
   # Add viable r/k pairs
@@ -103,16 +108,16 @@ plot_cmsy2 <- function(output){
   ##############################################################################
 
   # Setup plot
-  xmax <- ceiling(max(ref_ts$ffmsy) / 0.5) * 0.5
-  ymax <- ceiling(max(ref_ts$bbmsy) / 0.5) * 0.5
-  plot(bbmsy ~ ffmsy, ref_ts, bty="n", type="l", las=1,
+  xmax <- ceiling(max(ref_ts$bbmsy) / 0.5) * 0.5
+  ymax <- ceiling(max(ref_ts$ffmsy) / 0.5) * 0.5
+  plot(ffmsy ~ bbmsy, ref_ts, bty="n", type="l", las=1,
        xlim=c(0,xmax), ylim=c(0,ymax), main="E. Kobe plot",
-       xlab=expression("F / F"["MSY"]), ylab=expression("B / B"["MSY"]))
+       xlab=expression("B / B"["MSY"]), ylab=expression("F / F"["MSY"]))
   lines(x=c(0, xmax), y=c(1,1), lty=2)
   lines(x=c(1, 1), y=c(0,ymax), lty=2)
   # Add start/end points
-  points(x=ref_ts$ffmsy[1], y=ref_ts$bbmsy[1], pch=22, cex=1.4, bg="white")
-  points(x=ref_ts$ffmsy[nrow(ref_ts)], y=ref_ts$bbmsy[nrow(ref_ts)], pch=22, cex=1.4, bg="grey70")
+  points(x=ref_ts$bbmsy[1], y=ref_ts$ffmsy[1], pch=22, cex=1.4, bg="white")
+  points(x=ref_ts$bbmsy[nrow(ref_ts)], y=ref_ts$ffmsy[nrow(ref_ts)], pch=22, cex=1.4, bg="grey70")
   # Add points legend
   legend("topright", bty="n", legend=c(yr1, yr2), pch=22, pt.bg=c("white", "grey70"), pt.cex=1.4)
 
