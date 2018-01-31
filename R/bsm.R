@@ -100,6 +100,9 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
                 r.low=NA, r.hi=NA, stb.low=NA, stb.hi=NA, int.yr=NA,
                 intb.low=NA, intb.hi=NA, endb.low=NA, endb.hi=NA, q.start=NA, q.end=NA, verbose=T){
 
+  # Display 3 digits
+  options(digits=3)
+
   # Perform error checks
   btypes <- c("CPUE", "biomass")
   res_vals <- c("High", "Medium", "Low", "Very low")
@@ -505,7 +508,7 @@ bsm <- function(year, catch, biomass, btype, resilience=NA,
     cat("------------------------------------------------------------\n")
     if(btype == "CPUE") cat("q   =", mean.q,", lcl =", lcl.q, ", ucl =", ucl.q,"\n")
     cat("r   =", r.jags,", 95% CL =", lcl.r.jags, "-", ucl.r.jags,", k =", k.jags,", 95% CL =", lcl.k.jags, "-", ucl.k.jags,"\n")
-    cat("MSY =", MSY.jags,", 95% CL =", lcl.MSY.jags, "-", ucl.MSY.jags,"\n")
+    cat("MSY =", MSY.jags*1000,", 95% CL =", lcl.MSY.jags*1000, "-", ucl.MSY.jags*1000,"\n")
     cat("Relative biomass in last year =", quant.P[2,][nyr], "k, 2.5th perc =",quant.P[1,][nyr],
         ", 97.5th perc =", quant.P[3,][nyr],"\n")
     cat("Exploitation F/(r/2) in last year =", (ct.raw[nyr]/(quant.P[2,][nyr]*k.jags))/(r.jags/2) ,"\n\n")
