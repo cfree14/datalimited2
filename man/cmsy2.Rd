@@ -53,7 +53,7 @@ parameter combinations to estimate biomass, fishing mortality, and stock status
 (i.e., B/BMSY, F/FMSY) time series and biological/management quantities
 (i.e., r, K, MSY, BMSY, FMSY).
 
-This implementation of CMSY is based on "version q". CMSY is constantly being improved
+This implementation of CMSY is based on version "O 7q". CMSY is constantly being improved
 so please consult the original authors about where to find the most up-to-date method.
 }
 \examples{
