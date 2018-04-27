@@ -28,7 +28,7 @@ The package implements the following catch-only stock assessment models:
 The results of all but the rORCS model can be visualized using the `?plot_dlm` function.
 
 The performance of catch-only methods (i.e., their ability to accurately estimate B/BMSY
-or classify categorical status) can be compared using the `?performance` function.
+or accurately classify categorical status) can be compared using the `?performance` function.
 
 Citation
 --------
