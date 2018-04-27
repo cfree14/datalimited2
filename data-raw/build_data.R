@@ -23,10 +23,15 @@ YELLSNEMATL <- YELLSNEMATL_orig %>%
   select(stockid, year, tc, ssb, f, b_bmsy, f_fmsy) %>%
   rename(catch=tc, biomass=ssb, bbmsy=b_bmsy, ffmsy=f_fmsy)
 
+# Example COM estimates
+load("data-raw/ramldb_preds_all.Rdata")
+
 # Build data
 devtools::use_data(SOLIRIS, overwrite=T)
 devtools::use_data(TIGERFLAT, overwrite=T)
 devtools::use_data(YELLSNEMATL, overwrite=T)
+devtools::use_data(preds, overwrite=T)
+
 
 # Internal data
 ################################################################################

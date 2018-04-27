@@ -52,3 +52,12 @@
 #' }
 "YELLSNEMATL"
 
+#' RAM Legacy Database catch-only status predictions
+#'
+#' A dataset containing the catch and biomass time series for USA Southern
+#' New England/Mid-Atlantic (SNE/MA) Yellowtail flounder (\emph{Pleuronectes ferruginea}) from 1973-2014.
+#' This dataset is included for additional testing of the \pkg{datalimited2} package.
+#'
+#' @format A data frame with 161 rows (stocks) and 57 variables including B/BMSY estimates
+#' and status estimates.
+"preds"
