@@ -1,13 +1,12 @@
 
 # Plot MS-cMSY results
-# Plot MS-cMSY results
 plot_ms_cmsy <- function(output){
 
   # Loop through species
-  spp <- species
-  nspp <- length(species)
+  spp <- output$stocks
+  nspp <- length(spp)
   par(mfcol=c(3,nspp), mar=c(3,4,2,1), mgp=c(2.5,0.7,0), xpd=NA)
-  for(i in 1:length(species)){
+  for(i in 1:length(spp)){
 
     # Subset data
     yrs <- out$yrs
