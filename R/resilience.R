@@ -14,8 +14,8 @@
 resilience <- function(species){
 
   # FB/SLB taxa key
-  taxa_key_fb <- load_taxa(server="https://fishbase.ropensci.org") %>% mutate(type="fish") %>% select(type, everything())
-  taxa_key_slb <- sealifebase %>% mutate(type="invert") %>% select(type, everything())
+  taxa_key_fb <- rfishbase::load_taxa(server="https://fishbase.ropensci.org") %>% mutate(type="fish") %>% select(type, everything())
+  taxa_key_slb <- rfishbase::sealifebase %>% mutate(type="invert") %>% select(type, everything())
   taxa_key <-  taxa_key_fb %>%
     bind_rows(taxa_key_slb) %>%
     setNames(tolower(names(.))) %>%
@@ -45,7 +45,7 @@ resilience <- function(species){
 
     # Get resilience info from Fishbase
     options(FISHBASE_API = "https://fishbase.ropensci.org")
-    fin_orig <- stocks(spp_fin)
+    fin_orig <- rfishbase::stocks(spp_fin)
     lh_fin <- fin_orig %>%
       select(sciname, Resilience) %>%
       filter(!is.na(Resilience)) %>%
@@ -69,7 +69,7 @@ resilience <- function(species){
 
       # Get resilience info from Fishbase
       options(FISHBASE_API = "https://fishbase.ropensci.org/sealifebase")
-      inv_orig <- stocks(spp_inv)
+      inv_orig <- rfishbase::stocks(spp_inv)
       lh_inv <- inv_orig %>%
         select(sciname, Resilience) %>%
         filter(!is.na(Resilience)) %>%
