@@ -55,9 +55,9 @@ resilience <- function(species){
     options(FISHBASE_API = "https://fishbase.ropensci.org")
     fin_orig <- rfishbase::stocks(spp_fin)
     lh_fin <- fin_orig %>%
-      select(sciname, Resilience) %>%
+      select(Species, Resilience) %>%
       filter(!is.na(Resilience)) %>%
-      rename(species=sciname, resilience=Resilience) %>%
+      rename(species=Species, resilience=Resilience) %>%
       mutate(resilience=factor(resilience, levels=c("Very low", "Low", "Medium", "High")))
 
     # Calculate mode (default is to resolve ties with lower value)
@@ -79,9 +79,9 @@ resilience <- function(species){
       options(FISHBASE_API = "https://fishbase.ropensci.org/sealifebase")
       inv_orig <- rfishbase::stocks(spp_inv)
       lh_inv <- inv_orig %>%
-        select(sciname, Resilience) %>%
+        select(Species, Resilience) %>%
         filter(!is.na(Resilience)) %>%
-        rename(species=sciname, resilience=Resilience) %>%
+        rename(species=Species, resilience=Resilience) %>%
         mutate(resilience=factor(resilience, levels=c("Very low", "Low", "Medium", "High")))
 
       # Calculate mode (default is to resolve ties with lower value)
