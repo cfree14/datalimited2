@@ -1,4 +1,20 @@
 
+# Helper function
+Sdistrib = function(n, s_mean) {
+  nv = 0 ; n.redo = 0
+  while(nv < n) {
+    n.redo = n.redo+1
+    if(s_mean<=0.5) {
+      si1 = fGarch::rsnorm(n*n.redo, mean=max(s_mean,0)-0.072, sd=0.189, xi=0.763)
+      si = si1[si1>0 & si1<1]
+    } else if(s_mean>0.5) {
+      si1 = fGarch::rsnorm(n*n.redo, mean=max(s_mean,0)+0.179, sd=0.223, xi=0.904)
+      si = si1[si1>0 & si1<1] }
+    if(length(si)>n) si = sample(si,n);
+    nv = length(si) }
+  return (si)
+}
+
 # Compute predictors for the Zhou-BRT catch-only stock assessment model
 catchParam <- function(catchData) {
   sid = unique(as.character(catchData$stock))
@@ -27,7 +43,7 @@ catchParam <- function(catchData) {
     aa0 = summary(line0)$coeff[1]; bb0 = summary(line0)$coeff[2]    #all yr
     aa1 = summary(line1)$coeff[1]; bb1 = summary(line1)$coeff[2]    #before Cmax
     aa2 = summary(line2)$coeff[1]; bb2 = summary(line2)$coeff[2]    #after Cmax
-    for (j in 1:n.ab) { # periodical regressions
+    for (j in 1:n.ab){ # periodical regressions
       yrLast.cent = yr[(nyr-j):nyr]-mean(yr[(nyr-j):nyr])
       l.last = stats::lm(C[(nyr-j):nyr]~yrLast.cent)                   # last several years
       a[i,j] = summary(l.last)$coeff[1];
@@ -35,17 +51,19 @@ catchParam <- function(catchData) {
       yrBegin.cent = yr[1:(j+1)]-mean(yr[1:(j+1)])
       l.begin = stats::lm(C[1:(j+1)] ~ yrBegin.cent)                  # beginning several years
       a0[i,j] = summary(l.begin)$coeff[1]
-      b0[i,j] = summary(l.begin)$coeff[2] }
+      b0[i,j] = summary(l.begin)$coeff[2]
+    }
     # segmented regression: use yr and breakpoint is between 0-1
     f = tryCatch(segmented::segmented(line0, seg.Z=~yr, psi=list(yr=stats::median(yr))) , error=function(err) {})
-    if(is.null(f)) {
+    if(is.null(f)){
       a.spline = NA; b1.spline = NA; b2.spline = NA; breakPoint = NA
-    } else {
+    }else{
       a.spline = summary(f)$coef[1]
       b1.spline = summary(f)$coef[2]
       slp= segmented::slope(f)
       b2.spline = slp$yr[2]
-      breakPoint = (round(f$psi.history[[5]],0)-yr[1] +1)/nyr
+      # breakPoint = (round(f$psi.history[[5]],0)-yr[1] +1)/nyr # ORIGINAL ZHOU CODE
+      breakPoint = (round(f$psi[2],0)-yr[1] +1)/nyr # CHRIS CODE ONCE TOM BARNES SHOWS NOT WORKING
     }
     para[i,] = c(aa0, aa1, aa2, bb0, bb1, bb2, a[i,], b[i,], a0[i,], b0[i,], a.spline, b1.spline,b2.spline, breakPoint, C[1:n.ab], C[(nyr-n.ab): nyr], Cmean, nyrToCmaxR, nyr, C05max)
   }   # end params
@@ -132,7 +150,7 @@ zbrt <- function(year, catch){
 
   # Loop through years and estimate S
   # zBRT requires 7 years of data
-  for(i in nrow(d):8){
+  for(i in nrow(d):10){
     yr_use <- d$year[1:i]
     catch_use <- d$catch[1:i]
     s_out <- fit_zbrt(year=yr_use, catch=catch_use)
@@ -150,6 +168,7 @@ zbrt <- function(year, catch){
   ts <- d
   output <- list(ts=ts, method="zBRT")
   return(output)
+
 }
 
 
