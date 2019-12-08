@@ -27,10 +27,10 @@ YELLSNEMATL <- YELLSNEMATL_orig %>%
 load("data-raw/ramldb_preds_all.Rdata")
 
 # Build data
-devtools::use_data(SOLIRIS, overwrite=T)
-devtools::use_data(TIGERFLAT, overwrite=T)
-devtools::use_data(YELLSNEMATL, overwrite=T)
-devtools::use_data(preds, overwrite=T)
+usethis::use_data(SOLIRIS, overwrite=T)
+usethis::use_data(TIGERFLAT, overwrite=T)
+usethis::use_data(YELLSNEMATL, overwrite=T)
+usethis::use_data(preds, overwrite=T)
 
 
 # Internal data
@@ -42,7 +42,7 @@ load("data-raw/BRTmodelP38.Rdata")
 load("data-raw/refined_orcs_approach_bct_model.Rdata")
 
 # Build data
-devtools::use_data(BRTmodelP8, BRTmodelP38, rorcs_model, overwrite=T, internal=T)
+usethis::use_data(BRTmodelP8, BRTmodelP38, rorcs_model, overwrite=T, internal=T)
 
 
 
