@@ -4,23 +4,20 @@
 \alias{ms_cmsy}
 \title{Multispecies cMSY (beta version)}
 \usage{
-ms_cmsy(catch, stocks, res, id_fixed, npairs = 5000)
+ms_cmsy(data, key, npairs = 5000)
 }
 \arguments{
-\item{catch}{A dataframe with a 'year' column and additional columns containing
-the catch for each species in the multispecies fishery.}
+\item{data}{A dataframe with the following columns: stock, year, catch}
 
-\item{stocks}{A character vector with the names of the species in the multispecies fishery.
-Must be reported in the same order as the catch columns.}
+\item{key}{A dataframe with the following columns:
+\describe{
+\item{stock}{Name of the stock}
+\item{family}{Taxanomic family of each stock}
+\item{resilience}{Resilience of each stock (i.e., very low, low, medium, high)}
+\item{id_fixed}{A boolean to indicate whether initial depletion should be estimated (FALSE) or fixed at zero (TRUE).}
+}}
 
-\item{res}{A character vector with the resilience estimates for species in the
-multispecies fishery. Must be reported in the same order as the catch columns.
-Can be retrieved using the datalimited2::resilience() function.}
-
-\item{id_fixed}{A boolean (TRUE or FALSE) indicating whether to (TRUE) fix initial saturation at
-one (no depletion) or (FALSE) whether the initial saturation should be estimated.}
-
-\item{npairs}{The number of r-K pairs that should be evaulated. The default is 5,000.}
+\item{npairs}{Number of r-K pairs to evaluate (default=5,000)}
 }
 \value{
 A list with the following elements:
@@ -46,8 +43,15 @@ A list with the following elements:
 }
 \description{
 Estimates stock status (B/BMSY) time series for multispecies fisheries from
-time series of catch and estimates of resilience uing the multispecies cMSY
-(MS-cMSY) method of Free et al. (in prep). Note: this model is still under development.
+time series of catch uing the multispecies cMSY (MS-cMSY) method of
+Free et al. (in prep). Note: this model is still under development.
+}
+\details{
+Catch-only single-species stock assessment methods are generally poor predictors of stock status because changes in catch can reflect both changes in population size and fishing effort. However, when multiple species are harvested by a single fleet, each species may share the same underlying effort dynamics, which places an informative constraint on the interpretation of the catch time series. We developed a multispecies catch-only stock assessment model, MS-cMSY, that leverages these principles to estimate stock status. MS-cMSY is a multispecies extension of cMSY that identifies viable population trajectories as those that maximize correlation in implied fishing effort trends.
+}
+\examples{
+# Example coming soon
+a <- c(1,2)
 }
 \references{
 Free CM, Rudd MB, Kleisner KM, Thorson JT, Longo C, Minto C,

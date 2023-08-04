@@ -14,17 +14,20 @@
 resilience <- function(species){
 
   # Build FB/SLB taxa key
-  taxa_key_fb <- rfishbase::load_taxa(server="https://fishbase.ropensci.org") %>%
+  taxa_key_fb <- rfishbase::fishbase %>% # (1-old) rfishbase::load_taxa(server="fishbase") (2-old)# server="https://fishbase.ropensci.org"
+    as.data.frame() %>%
     mutate(type="fish") %>%
     select(type, everything()) %>%
     setNames(tolower(colnames(.))) %>%
-    rename(sciname=species) %>%
-    mutate(species=stringr::word(sciname, start=2, end=sapply(strsplit(sciname, " "), length)))
-  taxa_key_slb <- rfishbase::sealifebase %>%
+    mutate(sciname=paste(genus, species)) %>%
+    mutate_all(as.character)
+  taxa_key_slb <- rfishbase::sealifebase %>% # (1-old) rfishbase::load_taxa(server="sealifebase") (2-old) rfishbase::sealifebase %>%
+    as.data.frame() %>%
     mutate(type="invert") %>%
     select(type, everything()) %>%
     setNames(tolower(colnames(.))) %>%
-    mutate(sciname=paste(genus, species))
+    mutate(sciname=paste(genus, species)) %>%
+    mutate_all(as.character)
   taxa_key <-  taxa_key_fb %>%
     bind_rows(taxa_key_slb) %>%
     setNames(tolower(names(.))) %>%
@@ -52,8 +55,7 @@ resilience <- function(species){
   if(length(spp_fin)>0){
 
     # Get resilience info from Fishbase
-    options(FISHBASE_API = "https://fishbase.ropensci.org")
-    fin_orig <- rfishbase::stocks(spp_fin)
+    fin_orig <- rfishbase::stocks(spp_fin, server="fishbase")
     lh_fin <- fin_orig %>%
       select(Species, Resilience) %>%
       filter(!is.na(Resilience)) %>%
@@ -76,8 +78,7 @@ resilience <- function(species){
     if(length(spp_inv)>0){
 
       # Get resilience info from Fishbase
-      options(FISHBASE_API = "https://fishbase.ropensci.org/sealifebase")
-      inv_orig <- rfishbase::stocks(spp_inv)
+      inv_orig <- rfishbase::stocks(spp_inv, server="sealifebase")
       lh_inv <- inv_orig %>%
         select(Species, Resilience) %>%
         filter(!is.na(Resilience)) %>%
